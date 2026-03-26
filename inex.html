@@ -1,0 +1,22 @@
+<script>
+    function openProgram(repoName, cleanName) {
+        // Enviamos la URL completa del otro repositorio a la página de Tumblr
+        window.parent.postMessage({
+            action: 'launch_app',
+            url: `https://borfwashere.github.io/${repoName}/`, // Aquí usas el nombre del repositorio
+            title: cleanName
+        }, '*');
+    }
+</script>
+
+<div class="folder-content">
+    <div class="exe-icon" onclick="openProgram('matrix-project', 'Matrix.exe')">
+        <div class="icon-container"><img src="icon_url.png"></div>
+        <p class="exe-label">Matrix.exe</p>
+    </div>
+
+    <div class="exe-icon" onclick="openProgram('glitch-art-repo', 'Glitch.exe')">
+        <div class="icon-container"><img src="icon_url_2.png"></div>
+        <p class="exe-label">Glitch.exe</p>
+    </div>
+</div>
