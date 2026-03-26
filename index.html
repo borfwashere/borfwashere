@@ -9,9 +9,8 @@
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
     <style>
-        /* LIMPIEZA TOTAL */
+        /* Estilos base */
         #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
-
         body, html { 
             background-color: #008080 !important; 
             margin: 0; padding: 0; 
@@ -20,11 +19,27 @@
             user-select: none;
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
         }
-
         #mainDesktop { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
         fos-window { background-color: #c0c0c0 !important; }
+
+        /* Contenedor para que la App ocupe toda la ventana sin mostrar el link */
+        .window-iframe-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
         .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
         .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
@@ -62,71 +77,3 @@
         <fos-icon href="programs" name="Programs">
             <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
         </fos-icon>
-
-        <fos-icon href="readme" name="ReadMe">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
-        </fos-icon>
-
-        <fos-window name="toys" title="C:\Borf\Toys">
-            <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('matrix')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
-                    <p class="exe-label">Matrix.exe</p>
-                </div>
-                <div class="exe-icon" onclick="launchApp('gifsweeper')">
-                    <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
-                    <p class="exe-label">GifSweeper.exe</p>
-                </div>
-            </div>
-        </fos-window>
-
-        <fos-window name="programs" title="C:\Borf\Programs">
-            <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('ruttetra')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
-                    <p class="exe-label">Ruttetra.exe</p>
-                </div>
-                <div class="exe-icon" onclick="launchApp('pixelsort')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
-                    <p class="exe-label">Pixelsort.exe</p>
-                </div>
-            </div>
-        </fos-window>
-
-        <fos-window name="readme" title="System Info">
-            <div style="padding: 20px; background: #fff; height: 100%; font-size: 12px; font-family: sans-serif;">
-                <h3>Borsec Francisco</h3>
-                <hr>
-                <p>Navegación restaurada. Clic simple para abrir aplicaciones.</p>
-            </div>
-        </fos-window>
-    </fos-desktop>
-
-    <script>
-        // SEGURIDAD
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) return false;
-        };
-
-        // LA FUNCIÓN QUE SÍ FUNCIONA (Abre en pestaña/ventana nueva)
-        function launchApp(appName) {
-            let url = "";
-            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
-            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
-            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html"; 
-            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
-
-            if (url) {
-                // Abrimos en una ventana limpia
-                window.open(url, '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no');
-            }
-        }
-
-        setInterval(() => {
-            const clock = document.getElementById('clock');
-            if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }, 1000);
-    </script>
-</body>
-</html>
