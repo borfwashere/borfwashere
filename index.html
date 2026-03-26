@@ -23,7 +23,18 @@
         #mainDesktop { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
-        fos-window { background-color: #c0c0c0 !important; }
+        
+        /* ESTILO VENTANA WINDOWS 98 */
+        fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; }
+        
+        /* CONTENEDOR DEL PROGRAMA (Oculta el link) */
+        .app-container {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+            display: block;
+        }
 
         .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
         .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
@@ -64,26 +75,26 @@
             <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
         </fos-icon>
 
-        <fos-window name="toys" title="C:\Borf\Toys">
+        <fos-window name="toys" title="C:\Borf\Toys" width="450" height="350">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('matrix')">
+                <div class="exe-icon" onclick="launchInternalApp('Matrix.exe', 'https://borfwashere.github.io/matrix/matrix.html')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
                     <p class="exe-label">Matrix.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('gifsweeper')">
+                <div class="exe-icon" onclick="launchInternalApp('GifSweeper.exe', 'https://borfwashere.github.io/matrix/gifsweeper.html')">
                     <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
                     <p class="exe-label">GifSweeper.exe</p>
                 </div>
             </div>
         </fos-window>
 
-        <fos-window name="programs" title="C:\Borf\Programs">
+        <fos-window name="programs" title="C:\Borf\Programs" width="450" height="350">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('ruttetra')">
+                <div class="exe-icon" onclick="launchInternalApp('Ruttetra.exe', 'https://borfwashere.github.io/ruttetraborf/ruttetraborf.html')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
                     <p class="exe-label">Ruttetra.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('pixelsort')">
+                <div class="exe-icon" onclick="launchInternalApp('Pixelsort.exe', 'https://borfwashere.github.io/ruttetraborf/pixelborf.html')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
                     <p class="exe-label">Pixelsort.exe</p>
                 </div>
@@ -92,9 +103,9 @@
 
         <fos-window name="readme" title="System Info">
             <div style="padding: 20px; background: #fff; height: 100%; font-size: 12px; font-family: sans-serif;">
-                <h3>Borsec Station v1.1</h3>
+                <h3>Borsec Station v1.2</h3>
                 <hr>
-                <p>Programas funcionales con URL oculta.</p>
+                <p>Modo "Encapsulado" Activo. Los programas se ejecutan dentro del shell.</p>
             </div>
         </fos-window>
     </fos-desktop>
@@ -106,24 +117,26 @@
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) return false;
         };
 
-        // FUNCIÓN CLOAKING: Oculta el enlace abriendo una ventana limpia
-        function launchApp(appName) {
-            let url = "";
-            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
-            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
-            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html"; 
-            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
+        // LA FUNCIÓN QUE OCULTA EL ENLACE TOTALMENTE
+        function launchInternalApp(title, url) {
+            const desktop = document.getElementById('mainDesktop');
+            const win = document.createElement('fos-window');
+            
+            // Atributos de la ventana FOS
+            win.setAttribute('name', title.replace('.', '_'));
+            win.setAttribute('title', title);
+            
+            // Tamaño de la ventana tipo "Programa"
+            win.style.width = "80vw";
+            win.style.height = "70vh";
+            win.style.top = "10vh";
+            win.style.left = "10vw";
 
-            if (url) {
-                // Configuramos la ventana para que NO tenga barra de herramientas ni de dirección
-                const width = 1200;
-                const height = 800;
-                const left = (window.innerWidth / 2) - (width / 2);
-                const top = (window.innerHeight / 2) - (height / 2);
-                
-                // 'location=no' intenta ocultar la URL (algunos navegadores la muestran fija, pero es lo máximo posible)
-                window.open(url, appName, `width=${width},height=${height},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,titlebar=no`);
-            }
+            // INYECTAMOS EL IFRAME. 
+            // Usamos 'loading="lazy"' y permitimos scripts para asegurar que el contenido cargue.
+            win.innerHTML = `<iframe src="${url}" class="app-container" allow="autoplay; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>`;
+            
+            desktop.appendChild(win);
         }
 
         setInterval(() => {
