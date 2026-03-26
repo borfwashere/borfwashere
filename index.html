@@ -1,148 +1,132 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Borsec Station</title>
-    
-    <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
-    <script src="https://victorribeiro.com/js/fos.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Borsec Station</title>
+    
+    <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
+    <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
-    <style>
-        /* LIMPIEZA TOTAL */
-        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
+    <style>
+        /* LIMPIEZA TOTAL */
+        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
 
-        body, html { 
-            background-color: #008080 !important; 
-            margin: 0; padding: 0; 
-            width: 100vw; height: 100vh; 
-            overflow: hidden !important;
-            user-select: none;
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
-        }
+        body, html { 
+            background-color: #008080 !important; 
+            margin: 0; padding: 0; 
+            width: 100vw; height: 100vh; 
+            overflow: hidden !important;
+            user-select: none;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
+        }
 
-        #mainDesktop { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
-        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
-        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
-        fos-window { background-color: #c0c0c0 !important; }
+        #mainDesktop { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
+        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
+        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
+        fos-window { background-color: #c0c0c0 !important; }
 
-        .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
-        .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
+        .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+        .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
 
-        .folder-content { 
-            padding: 20px; background: #fff; height: 100%; 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
-        }
-        
-        .exe-icon { cursor: pointer; width: 85px; height: 85px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .exe-icon:hover { background-color: #e8f0fe; outline: 1px dotted #000; }
-        .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: sans-serif; }
+        .folder-content { 
+            padding: 20px; background: #fff; height: 100%; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
+        }
+        
+        .exe-icon { cursor: pointer; width: 85px; height: 85px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .exe-icon:hover { background-color: #e8f0fe; outline: 1px dotted #000; }
+        .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: sans-serif; }
 
-        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
-        
-        /* Contenedor para el iframe */
-        .app-view { width: 100%; height: 100%; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
-    </style>
+        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
+    </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <fos-desktop id="mainDesktop">
-        <fos-bar>
-            <fos-menu name="Start">
-                <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
-                <hr>
-                <fos-menu-item href="readme">ReadMe</fos-menu-item>
-                <fos-menu-item href="toys">Toys</fos-menu-item>
-                <fos-menu-item href="programs">Programs</fos-menu-item>
-            </fos-menu>
-            <div id="clock">00:00</div>
-        </fos-bar>
+    <fos-desktop id="mainDesktop">
+        <fos-bar>
+            <fos-menu name="Start">
+                <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
+                <hr>
+                <fos-menu-item href="readme">ReadMe</fos-menu-item>
+                <fos-menu-item href="toys">Toys</fos-menu-item>
+                <fos-menu-item href="programs">Programs</fos-menu-item>
+            </fos-menu>
+            <div id="clock">00:00</div>
+        </fos-bar>
 
-        <fos-icon href="toys" name="Toys">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
-        </fos-icon>
+        <fos-icon href="toys" name="Toys">
+            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
+        </fos-icon>
 
-        <fos-icon href="programs" name="Programs">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
-        </fos-icon>
+        <fos-icon href="programs" name="Programs">
+            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
+        </fos-icon>
 
-        <fos-icon href="readme" name="ReadMe">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
-        </fos-icon>
+        <fos-icon href="readme" name="ReadMe">
+            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
+        </fos-icon>
 
-        <fos-window name="toys" title="C:\Borf\Toys">
-            <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('matrix')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
-                    <p class="exe-label">Matrix.exe</p>
-                </div>
-                <div class="exe-icon" onclick="launchApp('gifsweeper')">
-                    <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
-                    <p class="exe-label">GifSweeper.exe</p>
-                </div>
-            </div>
-        </fos-window>
+        <fos-window name="toys" title="C:\Borf\Toys">
+            <div class="folder-content">
+                <div class="exe-icon" onclick="launchApp('matrix')">
+                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
+                    <p class="exe-label">Matrix.exe</p>
+                </div>
+                <div class="exe-icon" onclick="launchApp('gifsweeper')">
+                    <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
+                    <p class="exe-label">GifSweeper.exe</p>
+                </div>
+            </div>
+        </fos-window>
 
-        <fos-window name="programs" title="C:\Borf\Programs">
-            <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('ruttetra')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
-                    <p class="exe-label">Ruttetra.exe</p>
-                </div>
-                <div class="exe-icon" onclick="launchApp('pixelsort')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
-                    <p class="exe-label">Pixelsort.exe</p>
-                </div>
-            </div>
-        </fos-window>
+        <fos-window name="programs" title="C:\Borf\Programs">
+            <div class="folder-content">
+                <div class="exe-icon" onclick="launchApp('ruttetra')">
+                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
+                    <p class="exe-label">Ruttetra.exe</p>
+                </div>
+                <div class="exe-icon" onclick="launchApp('pixelsort')">
+                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
+                    <p class="exe-label">Pixelsort.exe</p>
+                </div>
+            </div>
+        </fos-window>
 
-        <fos-window name="readme" title="System Info">
-            <div style="padding: 20px; background: #fff; height: 100%; font-size: 12px; font-family: sans-serif;">
-                <h3>Borsec Francisco</h3>
-                <hr>
-                <p>Navegación restaurada. Clic simple para abrir aplicaciones.</p>
-            </div>
-        </fos-window>
+        <fos-window name="readme" title="System Info">
+            <div style="padding: 20px; background: #fff; height: 100%; font-size: 12px; font-family: sans-serif;">
+                <h3>Borsec Francisco</h3>
+                <hr>
+                <p>Navegación restaurada. Clic simple para abrir aplicaciones.</p>
+            </div>
+        </fos-window>
+    </fos-desktop>
 
-        <fos-window name="app_runner" title="Application" visible="false" width="900" height="650">
-            <div id="app_host" class="app-view"></div>
-        </fos-window>
+    <script>
+        // SEGURIDAD
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) return false;
+        };
 
-    </fos-desktop>
+        // LA FUNCIÓN QUE SÍ FUNCIONA (Abre en pestaña/ventana nueva)
+        function launchApp(appName) {
+            let url = "";
+            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
+            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
+            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html"; 
+            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
 
-    <script>
-        // SEGURIDAD
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        
-        // LANZADOR
-        function launchApp(appName) {
-            let url = "";
-            let title = "";
-            
-            if (appName === 'matrix') { url = "https://borfwashere.github.io/matrix/matrix.html"; title = "Matrix.exe"; }
-            else if (appName === 'gifsweeper') { url = "https://borfwashere.github.io/matrix/gifsweeper.html"; title = "GifSweeper.exe"; }
-            else if (appName === 'ruttetra') { url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html"; title = "Ruttetra.exe"; }
-            else if (appName === 'pixelsort') { url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html"; title = "Pixelsort.exe"; }
+            if (url) {
+                // Abrimos en una ventana limpia
+                window.open(url, '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no');
+            }
+        }
 
-            if (url) {
-                const win = document.querySelector('fos-window[name="app_runner"]');
-                const host = document.getElementById('app_host');
-                
-                // Cambiamos el título y el contenido
-                win.setAttribute('title', title);
-                host.innerHTML = `<iframe src="${url}"></iframe>`;
-                
-                // Mostramos la ventana
-                win.setAttribute('visible', 'true');
-                win.setAttribute('active', 'true');
-            }
-        }
-
-        setInterval(() => {
-            const clock = document.getElementById('clock');
-            if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }, 1000);
-    </script>
+        setInterval(() => {
+            const clock = document.getElementById('clock');
+            if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+    </script>
 </body>
 </html>
