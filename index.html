@@ -9,9 +9,6 @@
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
     <style>
-        /* --- 1. ESTILOS DE INTERFAZ (CSS UNIFORME) --- */
-        
-        /* Limpieza de interferencias */
         #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { 
             display: none !important; 
             pointer-events: none !important; 
@@ -23,10 +20,6 @@
             margin: 0; padding: 0; 
             width: 100vw; height: 100vh; 
             overflow: hidden !important;
-            /* Bloqueo de selección de texto */
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
             user-select: none;
             touch-action: manipulation;
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
@@ -39,13 +32,11 @@
             z-index: 999999 !important;
         }
 
-        /* Estilos generales de FOS */
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
-        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; font-family: sans-serif; }
+        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
         
-        fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; box-shadow: 1px 1px 0 0 #000; }
+        fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; }
 
-        /* --- UNIFORMIDAD DE ICONOS --- */
         .icon-container {
             width: 32px; height: 32px;
             display: flex; align-items: center; justify-content: center;
@@ -54,63 +45,42 @@
         .icon-container img {
             width: 32px !important; height: 32px !important;
             image-rendering: pixelated;
-            -webkit-user-drag: none; /* Bloqueo de arrastre de imagen */
         }
 
-        /* Rejilla de carpetas (Explorador) */
+        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
+        .sweeper-emoji { font-size: 28px; text-shadow: 1px 1px 0px #fff; }
+
         .folder-content { 
             padding: 20px;
-            background: #fff; /* Fondo blanco tipo explorador real */
+            background: #fff; 
             height: 100%; 
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+            gap: 15px;
             justify-items: center;
             align-items: start;
             overflow-y: auto;
         }
         
-        /* Contenedor del icono .exe */
         .exe-icon { 
             cursor: pointer; 
             width: 85px; height: 85px;
             text-align: center;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 1px solid transparent; /* Para evitar saltos con el hover */
+            border: 1px solid transparent;
         }
-        .exe-icon:hover { 
-            background-color: #e8f0fe; /* Azul clarito de selección */
-            outline: 1px dotted #000080; /* Borde puntitos clásico */
-        }
+        .exe-icon:hover { background-color: #e8f0fe; border: 1px dotted #000080; }
         
         .exe-label {
             font-size: 11px; margin-top: 5px;
             font-family: 'MS Sans Serif', Arial, sans-serif;
             color: #000;
-            pointer-events: none; /* No interfiere con el clic del icono */
         }
 
-        /* Estilos especiales que ya tenías */
-        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
-        .sweeper-emoji { font-size: 28px; text-shadow: 1px 1px 0px #fff; }
-
-        /* Estilo para los iframes de las aplicaciones */
         .app-iframe { width: 100%; height: 100%; border: none; background: #000; }
 
-        /* OPTIMIZACIÓN MÓVIL */
         @media only screen and (max-width: 768px) {
-            fos-window {
-                width: 95% !important;
-                height: 80% !important;
-                top: 5% !important;
-                left: 2.5% !important;
-            }
-            .folder-content {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                padding: 10px;
-            }
-            fos-bar { height: 45px !important; }
-            #clock { line-height: 45px; font-size: 14px; }
+            fos-window { width: 95% !important; height: 80% !important; top: 5% !important; left: 2.5% !important; }
         }
     </style>
 </head>
@@ -155,4 +125,65 @@
 
         <fos-window name="programs" title="C:\Borf\Programs">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('Ruttetra.exe', '
+                <div class="exe-icon" onclick="launchApp('Ruttetra.exe', 'https://borfwashere.github.io/ruttetraborf/ruttetraborf.html')">
+                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
+                    <p class="exe-label">Ruttetra.exe</p>
+                </div>
+                <div class="exe-icon" onclick="launchApp('Pixelsort.exe', 'https://borfwashere.github.io/ruttetraborf/pixelborf.html')">
+                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
+                    <p class="exe-label">Pixelsort.exe</p>
+                </div>
+            </div>
+        </fos-window>
+
+        <fos-window name="readme" title="System Info">
+            <div style="padding: 20px; background: #fff; height: 100%; font-family: sans-serif; font-size: 12px; overflow-y: auto;">
+                <h3 style="margin:0;">Borsec Francisco</h3>
+                <hr>
+                <p><strong>Root Directory Structure:</strong></p>
+                <ul style="list-style: none; padding: 0; line-height: 1.6;">
+                    <li>📁 01_Engine_Core</li>
+                    <li>📁 02_Frameworks_Render</li>
+                    <li>📁 03_Desktop_Shell</li>
+                    <li>📁 04_Machine_Learning</li>
+                    <li>📁 05_Build_Tools</li>
+                    <li>📁 06_Examples_Templates</li>
+                    <li>📁 07_Archive_Storage</li>
+                </ul>
+            </div>
+        </fos-window>
+    </fos-desktop>
+
+    <script>
+        (function() {
+            document.addEventListener('contextmenu', e => e.preventDefault());
+            document.onkeydown = function(e) {
+                if (e.keyCode == 123) return false;
+                if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
+                if (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83)) return false;
+            };
+            document.addEventListener('dragstart', e => e.preventDefault());
+        })();
+
+        function launchApp(title, url) {
+            const desktop = document.getElementById('mainDesktop');
+            const win = document.createElement('fos-window');
+            win.setAttribute('name', title);
+            win.setAttribute('title', title);
+            
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            win.style.width = isMobile ? "95%" : "1000px";
+            win.style.height = isMobile ? "80%" : "700px";
+
+            win.innerHTML = `<iframe src="${url}" class="app-iframe"></iframe>`;
+            desktop.appendChild(win);
+        }
+
+        setInterval(() => {
+            const now = new Date();
+            const clock = document.getElementById('clock');
+            if(clock) clock.innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+    </script>
+</body>
+</html>
