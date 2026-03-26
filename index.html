@@ -3,52 +3,28 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Borsec Station</title>
-    
+    <title>Borsec Station v1.3</title>
     <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
-
     <style>
-        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
-
+        #tumblr_controls, .tmblr-iframe { display: none !important; }
         body, html { 
-            background-color: #008080 !important; 
-            margin: 0; padding: 0; 
-            width: 100vw; height: 100vh; 
-            overflow: hidden !important;
-            user-select: none;
+            background-color: #008080; margin: 0; padding: 0; 
+            width: 100vw; height: 100vh; overflow: hidden;
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
         }
-
-        #mainDesktop { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
-        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
-        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
+        #mainDesktop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
+        fos-bar { background: #c0c0c0; border-top: 1px solid #fff; }
+        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; font-family: sans-serif; }
+        fos-window { background-color: #c0c0c0; border: 2px solid; border-color: #fff #808080 #808080 #fff; }
         
-        /* ESTILO VENTANA WINDOWS 98 */
-        fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; }
-        
-        /* CONTENEDOR DEL PROGRAMA (Oculta el link) */
-        .app-container {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #000;
-            display: block;
-        }
-
-        .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
-        .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
-
-        .folder-content { 
-            padding: 20px; background: #fff; height: 100%; 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
-        }
-        
+        .folder-content { padding: 20px; background: #fff; height: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px; }
         .exe-icon { cursor: pointer; width: 85px; height: 85px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .exe-icon:hover { background-color: #e8f0fe; outline: 1px dotted #000; }
         .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: sans-serif; }
 
-        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
+        /* Contenedor donde se inyectará el programa */
+        .app-viewport { width: 100%; height: 100%; overflow: auto; background: #000; color: #0f0; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -58,7 +34,6 @@
             <fos-menu name="Start">
                 <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
                 <hr>
-                <fos-menu-item href="readme">ReadMe</fos-menu-item>
                 <fos-menu-item href="toys">Toys</fos-menu-item>
                 <fos-menu-item href="programs">Programs</fos-menu-item>
             </fos-menu>
@@ -66,82 +41,64 @@
         </fos-bar>
 
         <fos-icon href="toys" name="Toys">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
-        </fos-icon>
-        <fos-icon href="programs" name="Programs">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
-        </fos-icon>
-        <fos-icon href="readme" name="ReadMe">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
+            <div style="text-align:center"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" width="32"></div>
         </fos-icon>
 
-        <fos-window name="toys" title="C:\Borf\Toys" width="450" height="350">
+        <fos-window name="toys" title="C:\Borf\Toys">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchInternalApp('Matrix.exe', 'https://borfwashere.github.io/matrix/matrix.html')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
+                <div class="exe-icon" onclick="injectApp('Matrix.exe', 'https://borfwashere.github.io/matrix/matrix.html')">
+                    <img src="https://win98icons.alexmeub.com/icons/png/world-3.png" width="32">
                     <p class="exe-label">Matrix.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchInternalApp('GifSweeper.exe', 'https://borfwashere.github.io/matrix/gifsweeper.html')">
-                    <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
-                    <p class="exe-label">GifSweeper.exe</p>
-                </div>
-            </div>
-        </fos-window>
-
-        <fos-window name="programs" title="C:\Borf\Programs" width="450" height="350">
-            <div class="folder-content">
-                <div class="exe-icon" onclick="launchInternalApp('Ruttetra.exe', 'https://borfwashere.github.io/ruttetraborf/ruttetraborf.html')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
-                    <p class="exe-label">Ruttetra.exe</p>
-                </div>
-                <div class="exe-icon" onclick="launchInternalApp('Pixelsort.exe', 'https://borfwashere.github.io/ruttetraborf/pixelborf.html')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
-                    <p class="exe-label">Pixelsort.exe</p>
-                </div>
-            </div>
-        </fos-window>
-
-        <fos-window name="readme" title="System Info">
-            <div style="padding: 20px; background: #fff; height: 100%; font-size: 12px; font-family: sans-serif;">
-                <h3>Borsec Station v1.2</h3>
-                <hr>
-                <p>Modo "Encapsulado" Activo. Los programas se ejecutan dentro del shell.</p>
             </div>
         </fos-window>
     </fos-desktop>
 
     <script>
-        // SEGURIDAD
+        // SEGURIDAD BORSEC
         document.addEventListener('contextmenu', e => e.preventDefault());
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) return false;
-        };
+        
+        // FUNCIÓN DE INYECCIÓN (OCULTA EL LINK Y EVITA BLOQUEOS)
+        async function injectApp(title, url) {
+            try {
+                const response = await fetch(url);
+                const html = await response.text();
+                
+                const desktop = document.getElementById('mainDesktop');
+                const win = document.createElement('fos-window');
+                win.setAttribute('name', title.replace('.', '_'));
+                win.setAttribute('title', title);
+                win.style.width = "90vw";
+                win.style.height = "80vh";
+                
+                // Creamos un contenedor limpio e inyectamos el código directamente
+                const container = document.createElement('div');
+                container.className = "app-viewport";
+                
+                // Usamos un Shadow DOM o simplemente inyectamos el HTML
+                // Esto hace que el programa sea parte de TU página, eliminando el link
+                container.innerHTML = html;
+                
+                win.appendChild(container);
+                desktop.appendChild(win);
 
-        // LA FUNCIÓN QUE OCULTA EL ENLACE TOTALMENTE
-        function launchInternalApp(title, url) {
-            const desktop = document.getElementById('mainDesktop');
-            const win = document.createElement('fos-window');
-            
-            // Atributos de la ventana FOS
-            win.setAttribute('name', title.replace('.', '_'));
-            win.setAttribute('title', title);
-            
-            // Tamaño de la ventana tipo "Programa"
-            win.style.width = "80vw";
-            win.style.height = "70vh";
-            win.style.top = "10vh";
-            win.style.left = "10vw";
+                // Ejecutar scripts del programa inyectado manualmente
+                const scripts = container.querySelectorAll("script");
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement("script");
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
 
-            // INYECTAMOS EL IFRAME. 
-            // Usamos 'loading="lazy"' y permitimos scripts para asegurar que el contenido cargue.
-            win.innerHTML = `<iframe src="${url}" class="app-container" allow="autoplay; fullscreen" sandbox="allow-scripts allow-same-origin allow-forms"></iframe>`;
-            
-            desktop.appendChild(win);
+            } catch (err) {
+                alert("Error al cargar el programa: Borsec Security Block.");
+                console.error(err);
+            }
         }
 
         setInterval(() => {
-            const clock = document.getElementById('clock');
-            if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }, 1000);
     </script>
 </body>
