@@ -2,45 +2,83 @@ body, html {
     margin: 0; padding: 0; 
     width: 100%; height: 100%; 
     overflow: hidden;
-    background-color: #008080; /* El verde clásico de Win98 */
+    background-color: #008080;
+    /* Patrón de puntos clásico de Windows 98 */
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
+    font-family: 'MS Sans Serif', Arial, sans-serif;
 }
 
 #desktop {
     width: 100%; height: 100%;
 }
 
+/* Encabezado azul del menú inicio */
 .start-header {
     padding: 10px;
     background: linear-gradient(to right, #000080, #1084d0);
     color: white;
     font-weight: bold;
+    font-size: 13px;
 }
 
 #clock {
     padding: 0 10px;
     line-height: 30px;
-    font-family: 'MS Sans Serif', Arial;
     font-size: 12px;
+    border-left: 1px solid #808080;
 }
 
+/* Ventanas de FOS */
 fos-window {
     background-color: #c0c0c0 !important;
+    border: 2px solid;
+    border-color: #ffffff #808080 #808080 #ffffff !important;
+    box-shadow: 1px 1px 0 0 #000;
 }
 
-/* Estilo para el contenido de las carpetas */
+/* Contenido de las carpetas */
 .folder-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: 10px;
     padding: 20px;
-    background: #c0c0c0;
+    background: #fff; /* Fondo blanco dentro de la carpeta como el explorador */
     height: 100%;
+    overflow-y: auto;
 }
 
 .exe-item {
     text-align: center;
     cursor: pointer;
+    padding: 5px;
+    border: 1px solid transparent;
 }
 
-.exe-item img { width: 32px; image-rendering: pixelated; }
-.exe-item p { font-size: 11px; margin-top: 5px; }
+.exe-item:hover {
+    background-color: rgba(0, 0, 128, 0.1);
+    border: 1px dotted #000080;
+}
+
+.exe-item:active {
+    background-color: #000080;
+    color: white;
+}
+
+.exe-item img { 
+    width: 32px; 
+    height: 32px;
+    image-rendering: pixelated; 
+}
+
+.exe-item p { 
+    font-size: 11px; 
+    margin-top: 5px; 
+    pointer-events: none;
+}
+
+/* Estilo para los iconos del escritorio (fos-icon) */
+.icon-wrapper img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+}
