@@ -1,22 +1,48 @@
-<script>
-    function openProgram(repoName, cleanName) {
-        // Enviamos la URL completa del otro repositorio a la página de Tumblr
-        window.parent.postMessage({
-            action: 'launch_app',
-            url: `https://borfwashere.github.io/${repoName}/`, // Aquí usas el nombre del repositorio
-            title: cleanName
-        }, '*');
-    }
-</script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { 
+            background-color: #c0c0c0; /* Gris clásico */
+            margin: 0; padding: 15px;
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 15px;
+            user-select: none;
+        }
+        .icon {
+            width: 75px; text-align: center; cursor: pointer;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .icon:hover { outline: 1px dotted #000; }
+        .icon img { width: 32px; height: 32px; image-rendering: pixelated; }
+        .label { font-size: 11px; margin-top: 4px; color: black; }
+        .matrix-style { filter: drop-shadow(0 0 2px #00ff00) sepia(1) hue-rotate(80deg); }
+    </style>
+</head>
+<body>
 
-<div class="folder-content">
-    <div class="exe-icon" onclick="openProgram('matrix-project', 'Matrix.exe')">
-        <div class="icon-container"><img src="icon_url.png"></div>
-        <p class="exe-label">Matrix.exe</p>
+    <div class="icon" onclick="openApp('https://borfwashere.github.io/matrix/', 'Matrix.exe')">
+        <img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-style">
+        <div class="label">Matrix.exe</div>
     </div>
 
-    <div class="exe-icon" onclick="openProgram('glitch-art-repo', 'Glitch.exe')">
-        <div class="icon-container"><img src="icon_url_2.png"></div>
-        <p class="exe-label">Glitch.exe</p>
+    <div class="icon" onclick="openApp('https://borfwashere.github.io/matrix/gifsweeper.html', 'GifSweeper.exe')">
+        <img src="https://win98icons.alexmeub.com/icons/png/game_minesweeper-0.png">
+        <div class="label">Sweeper.exe</div>
     </div>
-</div>
+
+    <script>
+        // Esta función le "grita" a Tumblr que abra una ventana
+        function openApp(url, name) {
+            window.parent.postMessage({
+                action: 'open_app',
+                appUrl: url,
+                appName: name
+            }, '*');
+        }
+    </script>
+</body>
+</html>
