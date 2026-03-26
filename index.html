@@ -1,221 +1,158 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Borsec Station</title>
-    
-    <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
-    <script src="https://victorribeiro.com/js/fos.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Borsec Station</title>
+    
+    <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
+    <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
-    <style>
-        /* 1. LIMPIEZA DE INTERFERENCIAS */
-        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { 
-            display: none !important; 
-            pointer-events: none !important; 
-            visibility: hidden !important;
-        }
+    <style>
+        /* --- 1. ESTILOS DE INTERFAZ (CSS UNIFORME) --- */
+        
+        /* Limpieza de interferencias */
+        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { 
+            display: none !important; 
+            pointer-events: none !important; 
+            visibility: hidden !important;
+        }
 
-        body, html { 
-            background-color: #008080 !important; 
-            margin: 0; padding: 0; 
-            width: 100vw; height: 100vh; 
-            overflow: hidden !important;
-            user-select: none;
-            touch-action: manipulation; /* Optimiza toques en móvil */
-        }
+        body, html { 
+            background-color: #008080 !important; 
+            margin: 0; padding: 0; 
+            width: 100vw; height: 100vh; 
+            overflow: hidden !important;
+            /* Bloqueo de selección de texto */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
+        }
 
-        #mainDesktop {
-            position: fixed !important;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 999999 !important;
-        }
+        #mainDesktop {
+            position: fixed !important;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 999999 !important;
+        }
 
-        fos-window { background-color: #c0c0c0 !important; }
+        /* Estilos generales de FOS */
+        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
+        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; font-family: sans-serif; }
+        
+        fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; box-shadow: 1px 1px 0 0 #000; }
 
-        .icon-container {
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto; pointer-events: none;
-        }
-        .icon-container img {
-            width: 32px !important; height: 32px !important;
-            image-rendering: pixelated;
-        }
+        /* --- UNIFORMIDAD DE ICONOS --- */
+        .icon-container {
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto; pointer-events: none;
+        }
+        .icon-container img {
+            width: 32px !important; height: 32px !important;
+            image-rendering: pixelated;
+            -webkit-user-drag: none; /* Bloqueo de arrastre de imagen */
+        }
 
-        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
-        .sweeper-emoji { font-size: 28px; text-shadow: 1px 1px 0px #fff; }
+        /* Rejilla de carpetas (Explorador) */
+        .folder-content { 
+            padding: 20px;
+            background: #fff; /* Fondo blanco tipo explorador real */
+            height: 100%; 
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(95px, 1fr));
+            gap: 10px;
+            justify-items: center;
+            align-items: start;
+            overflow-y: auto;
+        }
+        
+        /* Contenedor del icono .exe */
+        .exe-icon { 
+            cursor: pointer; 
+            width: 85px; height: 85px;
+            text-align: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 1px solid transparent; /* Para evitar saltos con el hover */
+        }
+        .exe-icon:hover { 
+            background-color: #e8f0fe; /* Azul clarito de selección */
+            outline: 1px dotted #000080; /* Borde puntitos clásico */
+        }
+        
+        .exe-label {
+            font-size: 11px; margin-top: 5px;
+            font-family: 'MS Sans Serif', Arial, sans-serif;
+            color: #000;
+            pointer-events: none; /* No interfiere con el clic del icono */
+        }
 
-        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
-        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
-        
-        .folder-content { 
-            padding: 20px;
-            background: #c0c0c0; 
-            height: 100%; 
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 15px;
-            justify-items: center;
-            align-items: start;
-            overflow-y: auto;
-        }
-        
-        .exe-icon { 
-            cursor: pointer; 
-            width: 85px; height: 85px;
-            text-align: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        .exe-label {
-            font-size: 11px; margin-top: 5px;
-            font-family: 'MS Sans Serif', Arial, sans-serif;
-            color: #000;
-        }
+        /* Estilos especiales que ya tenías */
+        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
+        .sweeper-emoji { font-size: 28px; text-shadow: 1px 1px 0px #fff; }
 
-        /* -----------------------------------------------------------
-           NUEVA SECCIÓN: OPTIMIZACIÓN PARA MÓVILES
-        ----------------------------------------------------------- */
-        @media only screen and (max-width: 768px) {
-            /* Ajustar ventanas para que ocupen toda la pantalla en móvil */
-            fos-window {
-                width: 95% !important;
-                height: 80% !important;
-                top: 5% !important;
-                left: 2.5% !important;
-            }
+        /* Estilo para los iframes de las aplicaciones */
+        .app-iframe { width: 100%; height: 100%; border: none; background: #000; }
 
-            /* Iconos del escritorio más grandes para que sean fáciles de tocar */
-            fos-icon {
-                width: 70px !important;
-                height: 70px !important;
-            }
-
-            .icon-container, .icon-container img {
-                width: 40px !important;
-                height: 40px !important;
-            }
-
-            /* Ajustar la rejilla de las carpetas */
-            .folder-content {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-                padding: 10px;
-            }
-
-            /* Hacer la barra de tareas más alta para los dedos */
-            fos-bar {
-                height: 45px !important;
-            }
-            
-            #clock {
-                line-height: 45px;
-                font-size: 14px;
-            }
-        }
-    </style>
-
-    <script>
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-        function launchApp(appName) {
-            let url = "";
-            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
-            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
-            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html"; 
-            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
-
-            // En móvil, las ventanas emergentes a veces fallan. 
-            // Si detectamos móvil, podrías preferir abrir en la misma pestaña o usar window.open estándar.
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            
-            if (isMobile) {
-                // Abrir en una pestaña nueva para mejor visualización en móvil
-                window.open(url, '_blank');
-            } else {
-                const w = 1250; const h = 850;
-                const left = (screen.width/2)-(w/2); const top = (screen.height/2)-(h/2);
-                window.open(url, appName, `width=${w},height=${h},top=${top},left=${left},resizable=yes,scrollbars=yes`);
-            }
-        }
-    </script>
+        /* OPTIMIZACIÓN MÓVIL */
+        @media only screen and (max-width: 768px) {
+            fos-window {
+                width: 95% !important;
+                height: 80% !important;
+                top: 5% !important;
+                left: 2.5% !important;
+            }
+            .folder-content {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                padding: 10px;
+            }
+            fos-bar { height: 45px !important; }
+            #clock { line-height: 45px; font-size: 14px; }
+        }
+    </style>
 </head>
 <body oncontextmenu="return false;">
 
-    <fos-desktop id="mainDesktop">
-        <fos-bar>
-            <fos-menu name="Start">
-                <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
-                <hr>
-                <fos-menu-item href="readme">ReadMe</fos-menu-item>
-                <fos-menu-item href="toys">Toys</fos-menu-item>
-                <fos-menu-item href="programs">Programs</fos-menu-item>
-            </fos-menu>
-            <div id="clock">00:00</div>
-        </fos-bar>
+    <fos-desktop id="mainDesktop">
+        <fos-bar>
+            <fos-menu name="Start">
+                <div style="padding: 5px 10px; font-weight: bold; background: linear-gradient(to right, #000080, #1084d0); color: white;">Borsec Francisco</div>
+                <hr>
+                <fos-menu-item href="readme">ReadMe</fos-menu-item>
+                <fos-menu-item href="toys">Toys</fos-menu-item>
+                <fos-menu-item href="programs">Programs</fos-menu-item>
+            </fos-menu>
+            <div id="clock">00:00</div>
+        </fos-bar>
 
-        <fos-icon href="toys" name="Toys">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
-        </fos-icon>
+        <fos-icon href="toys" name="Toys">
+            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
+        </fos-icon>
 
-        <fos-icon href="programs" name="Programs">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
-        </fos-icon>
+        <fos-icon href="programs" name="Programs">
+            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
+        </fos-icon>
 
-        <fos-icon href="readme" name="ReadMe">
-            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
-        </fos-icon>
+        <fos-icon href="readme" name="ReadMe">
+            <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
+        </fos-icon>
 
-        <fos-window name="toys" title="C:\Borf\Toys">
-            <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('matrix')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
-                    <p class="exe-label">Matrix.exe</p>
-                </div>
-                <div class="exe-icon" onclick="launchApp('gifsweeper')">
-                    <div class="icon-container"><span class="sweeper-emoji">🙂</span></div>
-                    <p class="exe-label">GifSweeper.exe</p>
-                </div>
-            </div>
-        </fos-window>
+        <fos-window name="toys" title="C:\Borf\Toys">
+            <div class="folder-content">
+                <div class="exe-icon" onclick="launchApp('Matrix.exe', 'https://borfwashere.github.io/matrix/')">
+                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
+                    <p class="exe-label">Matrix.exe</p>
+                </div>
+                <div class="exe-icon" onclick="launchApp('GifSweeper.exe', 'https://borfwashere.github.io/matrix/gifsweeper.html')">
+                    <div class="icon-container"><span class="sweeper-emoji">🙂</span></div>
+                    <p class="exe-label">GifSweeper.exe</p>
+                </div>
+            </div>
+        </fos-window>
 
-        <fos-window name="programs" title="C:\Borf\Programs">
-            <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('ruttetra')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
-                    <p class="exe-label">Ruttetra.exe</p>
-                </div>
-                <div class="exe-icon" onclick="launchApp('pixelsort')">
-                    <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
-                    <p class="exe-label">Pixelsort.exe</p>
-                </div>
-            </div>
-        </fos-window>
-
-        <fos-window name="readme" title="System Info">
-            <div style="padding: 20px; background: #fff; height: 100%; font-family: sans-serif; font-size: 12px; overflow-y: auto;">
-                <h3 style="margin:0;">Borsec Francisco</h3>
-                <hr>
-                <p><strong>Root Directory Structure:</strong></p>
-                <ul style="list-style: none; padding: 0; line-height: 1.6;">
-                    <li>📁 01_Engine_Core</li>
-                    <li>📁 02_Frameworks_Render</li>
-                    <li>📁 03_Desktop_Shell</li>
-                    <li>📁 04_Machine_Learning</li>
-                    <li>📁 05_Build_Tools</li>
-                    <li>📁 06_Examples_Templates</li>
-                    <li>📁 07_Archive_Storage</li>
-                </ul>
-            </div>
-        </fos-window>
-    </fos-desktop>
-
-    <script>
-        setInterval(() => {
-            const now = new Date();
-            const clock = document.getElementById('clock');
-            if(clock) clock.innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }, 1000);
-    </script>
-</body>
-</html>
+        <fos-window name="programs" title="C:\Borf\Programs">
+            <div class="folder-content">
+                <div class="exe-icon" onclick="launchApp('Ruttetra.exe', '
