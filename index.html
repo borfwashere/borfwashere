@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Borsec OS - Desktop</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <fos-desktop id="desktop">
         <fos-bar>
@@ -21,11 +22,15 @@
         </fos-bar>
 
         <fos-icon name="Projects" onclick="openFolder('projects')">
-            <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png">
+            <div class="icon-wrapper">
+                <img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png">
+            </div>
         </fos-icon>
 
-        <fos-icon name="About" onclick="openFolder('system')">
-            <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png">
+        <fos-icon name="System" onclick="openFolder('system')">
+            <div class="icon-wrapper">
+                <img src="https://win98icons.alexmeub.com/icons/png/computer_explorer-4.png">
+            </div>
         </fos-icon>
 
     </fos-desktop>
