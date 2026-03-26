@@ -33,7 +33,7 @@
         }
 
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
-        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
+        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; font-family: sans-serif; }
         
         fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; }
 
@@ -112,7 +112,7 @@
 
         <fos-window name="toys" title="C:\Borf\Toys">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('Matrix.exe', 'https://borfwashere.github.io/matrix/')">
+                <div class="exe-icon" onclick="launchApp('Matrix.exe', 'https://borfwashere.github.io/matrix/matrix.html')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
                     <p class="exe-label">Matrix.exe</p>
                 </div>
@@ -168,15 +168,23 @@
         function launchApp(title, url) {
             const desktop = document.getElementById('mainDesktop');
             const win = document.createElement('fos-window');
-            win.setAttribute('name', title);
+            win.setAttribute('name', title.replace('.', '_'));
             win.setAttribute('title', title);
             
             const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            // Ajustamos el tamaño para que sea cómodo
             win.style.width = isMobile ? "95%" : "1000px";
             win.style.height = isMobile ? "80%" : "700px";
+            win.style.top = isMobile ? "5%" : "50px";
+            win.style.left = isMobile ? "2.5%" : "50px";
 
-            win.innerHTML = `<iframe src="${url}" class="app-iframe"></iframe>`;
+            // Aseguramos que el contenido sea un iframe limpio
+            win.innerHTML = `<iframe src="${url}" class="app-iframe" allow="fullscreen"></iframe>`;
             desktop.appendChild(win);
+            
+            // Forzamos a la librería a registrar la nueva ventana
+            if (typeof win.open === 'function') win.open();
         }
 
         setInterval(() => {
