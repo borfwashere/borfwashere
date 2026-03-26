@@ -23,23 +23,35 @@
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
         
-        .app-content { width: 100%; height: 100%; background: #000; }
-        iframe { width: 100%; height: 100%; border: none; }
+        /* Contenedor de la aplicación dentro de la ventana */
+        .app-container { width: 100%; height: 100%; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
 
-        .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; pointer-events: none; }
-        .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
+        /* Iconos con z-index alto para asegurar el clic */
+        .exe-icon { 
+            cursor: pointer !important; 
+            width: 85px; height: 85px; 
+            text-align: center; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            position: relative;
+            z-index: 1000 !important; 
+        }
+        .exe-icon:hover { background-color: rgba(232, 240, 254, 0.5); outline: 1px dotted #000; }
         
+        .icon-container { width: 32px; height: 32px; pointer-events: none; }
+        .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
+        .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: sans-serif; pointer-events: none; }
+
         .folder-content { 
             padding: 20px; background: #fff; height: 100%; 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
         }
-        
-        .exe-icon { cursor: pointer; width: 85px; height: 85px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; }
-        .exe-icon:hover { background-color: #e8f0fe; outline: 1px dotted #000; }
-        .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: sans-serif; pointer-events: none; }
     </style>
 </head>
-<body>
+<body oncontextmenu="return false;">
 
     <fos-desktop id="mainDesktop">
         <fos-bar>
@@ -62,12 +74,12 @@
 
         <fos-window name="toys" title="C:\Borf\Toys">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('matrix', 'Matrix.exe')">
+                <div class="exe-icon" onclick="window.launchApp('matrix', 'Matrix.exe')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png"></div>
                     <p class="exe-label">Matrix.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('gifsweeper', 'GifSweeper.exe')">
-                    <div class="icon-container"><span>🙂</span></div>
+                <div class="exe-icon" onclick="window.launchApp('gifsweeper', 'GifSweeper.exe')">
+                    <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
                     <p class="exe-label">GifSweeper.exe</p>
                 </div>
             </div>
@@ -75,34 +87,31 @@
 
         <fos-window name="programs" title="C:\Borf\Programs">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('ruttetra', 'Ruttetra.exe')">
+                <div class="exe-icon" onclick="window.launchApp('ruttetra', 'Ruttetra.exe')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
                     <p class="exe-label">Ruttetra.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('pixelsort', 'Pixelsort.exe')">
+                <div class="exe-icon" onclick="window.launchApp('pixelsort', 'Pixelsort.exe')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
                     <p class="exe-label">Pixelsort.exe</p>
                 </div>
             </div>
         </fos-window>
-
     </fos-desktop>
 
     <script>
         // Reloj
         setInterval(() => {
-            const c = document.getElementById('clock');
-            if(c) c.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const clock = document.getElementById('clock');
+            if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }, 1000);
 
-        // FUNCIÓN DE LANZAMIENTO CORREGIDA
-        function launchApp(appName, title) {
-            console.log("Intentando abrir:", appName); // Verificación en consola
-            
+        // Definimos la función en el objeto window para que sea global
+        window.launchApp = function(appName, title) {
             const desktop = document.querySelector('fos-desktop');
             const winId = "app_" + appName;
 
-            // Si ya existe, la activamos
+            // Si ya existe, traerla al frente
             let existing = document.querySelector(`fos-window[name="${winId}"]`);
             if (existing) {
                 existing.setAttribute('active', 'true');
@@ -110,24 +119,39 @@
             }
 
             let url = "";
-            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
-            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
-            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html";
-            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
+            let w = 800, h = 600;
+
+            if (appName === 'matrix') {
+                url = "https://borfwashere.github.io/matrix/matrix.html";
+                w = 900; h = 650;
+            } else if (appName === 'gifsweeper') {
+                url = "https://borfwashere.github.io/matrix/gifsweeper.html";
+                w = 400; h = 500;
+            } else if (appName === 'ruttetra') {
+                url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html";
+                w = 900; h = 650;
+            } else if (appName === 'pixelsort') {
+                url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
+                w = 900; h = 650;
+            }
 
             if (url) {
                 const win = document.createElement('fos-window');
                 win.setAttribute('name', winId);
                 win.setAttribute('title', title);
                 win.setAttribute('active', 'true');
-                win.setAttribute('width', '800');
-                win.setAttribute('height', '600');
+                win.setAttribute('width', w.toString());
+                win.setAttribute('height', h.toString());
                 
-                // Forzamos el renderizado del iframe
-                win.innerHTML = `<div class="app-content"><iframe src="${url}"></iframe></div>`;
+                // Estructura interna robusta para el iframe
+                win.innerHTML = `
+                    <div class="app-container">
+                        <iframe src="${url}" style="width:100%; height:100%; border:none;"></iframe>
+                    </div>
+                `;
                 desktop.appendChild(win);
             }
-        }
+        };
     </script>
 </body>
 </html>
