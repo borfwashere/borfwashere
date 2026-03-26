@@ -9,11 +9,8 @@
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
     <style>
-        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { 
-            display: none !important; 
-            pointer-events: none !important; 
-            visibility: hidden !important;
-        }
+        /* LIMPIEZA TOTAL */
+        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
 
         body, html { 
             background-color: #008080 !important; 
@@ -21,67 +18,27 @@
             width: 100vw; height: 100vh; 
             overflow: hidden !important;
             user-select: none;
-            touch-action: manipulation;
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
         }
 
-        #mainDesktop {
-            position: fixed !important;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            z-index: 999999 !important;
-        }
-
+        #mainDesktop { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
-        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; font-family: sans-serif; }
-        
-        fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; }
+        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
+        fos-window { background-color: #c0c0c0 !important; }
 
-        .icon-container {
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto; pointer-events: none;
-        }
-        .icon-container img {
-            width: 32px !important; height: 32px !important;
-            image-rendering: pixelated;
-        }
-
-        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
-        .sweeper-emoji { font-size: 28px; text-shadow: 1px 1px 0px #fff; }
+        .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+        .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
 
         .folder-content { 
-            padding: 20px;
-            background: #fff; 
-            height: 100%; 
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            gap: 15px;
-            justify-items: center;
-            align-items: start;
-            overflow-y: auto;
+            padding: 20px; background: #fff; height: 100%; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
         }
         
-        .exe-icon { 
-            cursor: pointer; 
-            width: 85px; height: 85px;
-            text-align: center;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            border: 1px solid transparent;
-        }
-        .exe-icon:hover { background-color: #e8f0fe; border: 1px dotted #000080; }
-        
-        .exe-label {
-            font-size: 11px; margin-top: 5px;
-            font-family: 'MS Sans Serif', Arial, sans-serif;
-            color: #000;
-        }
+        .exe-icon { cursor: pointer; width: 85px; height: 85px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .exe-icon:hover { background-color: #e8f0fe; outline: 1px dotted #000; }
+        .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: sans-serif; }
 
-        .app-iframe { width: 100%; height: 100%; border: none; background: #000; }
-
-        @media only screen and (max-width: 768px) {
-            fos-window { width: 95% !important; height: 80% !important; top: 5% !important; left: 2.5% !important; }
-        }
+        .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -89,7 +46,7 @@
     <fos-desktop id="mainDesktop">
         <fos-bar>
             <fos-menu name="Start">
-                <div style="padding: 5px 10px; font-weight: bold; background: linear-gradient(to right, #000080, #1084d0); color: white;">Borsec Francisco</div>
+                <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
                 <hr>
                 <fos-menu-item href="readme">ReadMe</fos-menu-item>
                 <fos-menu-item href="toys">Toys</fos-menu-item>
@@ -112,12 +69,12 @@
 
         <fos-window name="toys" title="C:\Borf\Toys">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('Matrix.exe', 'https://borfwashere.github.io/matrix/matrix.html')">
+                <div class="exe-icon" onclick="launchApp('matrix')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
                     <p class="exe-label">Matrix.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('GifSweeper.exe', 'https://borfwashere.github.io/matrix/gifsweeper.html')">
-                    <div class="icon-container"><span class="sweeper-emoji">🙂</span></div>
+                <div class="exe-icon" onclick="launchApp('gifsweeper')">
+                    <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
                     <p class="exe-label">GifSweeper.exe</p>
                 </div>
             </div>
@@ -125,11 +82,11 @@
 
         <fos-window name="programs" title="C:\Borf\Programs">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('Ruttetra.exe', 'https://borfwashere.github.io/ruttetraborf/ruttetraborf.html')">
+                <div class="exe-icon" onclick="launchApp('ruttetra')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
                     <p class="exe-label">Ruttetra.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('Pixelsort.exe', 'https://borfwashere.github.io/ruttetraborf/pixelborf.html')">
+                <div class="exe-icon" onclick="launchApp('pixelsort')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
                     <p class="exe-label">Pixelsort.exe</p>
                 </div>
@@ -137,60 +94,38 @@
         </fos-window>
 
         <fos-window name="readme" title="System Info">
-            <div style="padding: 20px; background: #fff; height: 100%; font-family: sans-serif; font-size: 12px; overflow-y: auto;">
-                <h3 style="margin:0;">Borsec Francisco</h3>
+            <div style="padding: 20px; background: #fff; height: 100%; font-size: 12px; font-family: sans-serif;">
+                <h3>Borsec Francisco</h3>
                 <hr>
-                <p><strong>Root Directory Structure:</strong></p>
-                <ul style="list-style: none; padding: 0; line-height: 1.6;">
-                    <li>📁 01_Engine_Core</li>
-                    <li>📁 02_Frameworks_Render</li>
-                    <li>📁 03_Desktop_Shell</li>
-                    <li>📁 04_Machine_Learning</li>
-                    <li>📁 05_Build_Tools</li>
-                    <li>📁 06_Examples_Templates</li>
-                    <li>📁 07_Archive_Storage</li>
-                </ul>
+                <p>Navegación restaurada. Clic simple para abrir aplicaciones.</p>
             </div>
         </fos-window>
     </fos-desktop>
 
     <script>
-        (function() {
-            document.addEventListener('contextmenu', e => e.preventDefault());
-            document.onkeydown = function(e) {
-                if (e.keyCode == 123) return false;
-                if (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) return false;
-                if (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83)) return false;
-            };
-            document.addEventListener('dragstart', e => e.preventDefault());
-        })();
+        // SEGURIDAD
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) return false;
+        };
 
-        function launchApp(title, url) {
-            const desktop = document.getElementById('mainDesktop');
-            const win = document.createElement('fos-window');
-            win.setAttribute('name', title.replace('.', '_'));
-            win.setAttribute('title', title);
-            
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            
-            // Ajustamos el tamaño para que sea cómodo
-            win.style.width = isMobile ? "95%" : "1000px";
-            win.style.height = isMobile ? "80%" : "700px";
-            win.style.top = isMobile ? "5%" : "50px";
-            win.style.left = isMobile ? "2.5%" : "50px";
+        // LA FUNCIÓN QUE SÍ FUNCIONA (Abre en pestaña/ventana nueva)
+        function launchApp(appName) {
+            let url = "";
+            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
+            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
+            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html"; 
+            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
 
-            // Aseguramos que el contenido sea un iframe limpio
-            win.innerHTML = `<iframe src="${url}" class="app-iframe" allow="fullscreen"></iframe>`;
-            desktop.appendChild(win);
-            
-            // Forzamos a la librería a registrar la nueva ventana
-            if (typeof win.open === 'function') win.open();
+            if (url) {
+                // Abrimos en una ventana limpia
+                window.open(url, '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no');
+            }
         }
 
         setInterval(() => {
-            const now = new Date();
             const clock = document.getElementById('clock');
-            if(clock) clock.innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }, 1000);
     </script>
 </body>
