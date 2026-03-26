@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Borsec Station</title>
+    <title>Borsec Station v1.1</title>
     
     <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
     <style>
-        /* LIMPIEZA TOTAL */
+        /* CONFIGURACIÓN DE INTERFAZ */
         #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
 
         body, html { 
@@ -24,19 +24,30 @@
         #mainDesktop { position: fixed !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
-        fos-window { background-color: #c0c0c0 !important; }
+        
+        /* Ventanas Estilo Windows 98 */
+        fos-window { background-color: #c0c0c0 !important; border: 2px solid; border-color: #fff #808080 #808080 #fff !important; }
 
+        /* Estilo de los Iconos */
         .icon-container { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
         .icon-container img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
 
         .folder-content { 
             padding: 20px; background: #fff; height: 100%; 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
+            overflow-y: auto;
         }
         
         .exe-icon { cursor: pointer; width: 85px; height: 85px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .exe-icon:hover { background-color: #e8f0fe; outline: 1px dotted #000; }
-        .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: sans-serif; }
+        .exe-icon:hover { background-color: #e8f0fe; outline: 1px dotted #000080; }
+        .exe-label { font-size: 11px; margin-top: 5px; color: #000; font-family: 'MS Sans Serif', Arial, sans-serif; }
+
+        /* Estilo para OCULTAR EL ENLACE (Contenedor Interno) */
+        .app-shell {
+            width: 100%; height: 100%;
+            border: none;
+            background: #000;
+        }
 
         .matrix-world { filter: drop-shadow(0 0 4px #00ff00) brightness(1.2) sepia(1) hue-rotate(80deg); }
     </style>
@@ -46,7 +57,7 @@
     <fos-desktop id="mainDesktop">
         <fos-bar>
             <fos-menu name="Start">
-                <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
+                <div style="padding: 5px 10px; font-weight: bold; background: linear-gradient(to right, #000080, #1084d0); color: white;">Borsec Francisco</div>
                 <hr>
                 <fos-menu-item href="readme">ReadMe</fos-menu-item>
                 <fos-menu-item href="toys">Toys</fos-menu-item>
@@ -58,35 +69,33 @@
         <fos-icon href="toys" name="Toys">
             <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
         </fos-icon>
-
         <fos-icon href="programs" name="Programs">
             <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
         </fos-icon>
-
         <fos-icon href="readme" name="ReadMe">
             <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/notepad-2.png"></div>
         </fos-icon>
 
-        <fos-window name="toys" title="C:\Borf\Toys">
+        <fos-window name="toys" title="C:\Borf\Toys" width="400" height="300">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('matrix')">
+                <div class="exe-icon" onclick="openInternalApp('Matrix.exe', 'https://borfwashere.github.io/matrix/matrix.html')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png" class="matrix-world"></div>
                     <p class="exe-label">Matrix.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('gifsweeper')">
+                <div class="exe-icon" onclick="openInternalApp('GifSweeper.exe', 'https://borfwashere.github.io/matrix/gifsweeper.html')">
                     <div class="icon-container"><span style="font-size:24px;">🙂</span></div>
                     <p class="exe-label">GifSweeper.exe</p>
                 </div>
             </div>
         </fos-window>
 
-        <fos-window name="programs" title="C:\Borf\Programs">
+        <fos-window name="programs" title="C:\Borf\Programs" width="400" height="300">
             <div class="folder-content">
-                <div class="exe-icon" onclick="launchApp('ruttetra')">
+                <div class="exe-icon" onclick="openInternalApp('Ruttetra.exe', 'https://borfwashere.github.io/ruttetraborf/ruttetraborf.html')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
                     <p class="exe-label">Ruttetra.exe</p>
                 </div>
-                <div class="exe-icon" onclick="launchApp('pixelsort')">
+                <div class="exe-icon" onclick="openInternalApp('Pixelsort.exe', 'https://borfwashere.github.io/ruttetraborf/pixelborf.html')">
                     <div class="icon-container"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
                     <p class="exe-label">Pixelsort.exe</p>
                 </div>
@@ -95,32 +104,41 @@
 
         <fos-window name="readme" title="System Info">
             <div style="padding: 20px; background: #fff; height: 100%; font-size: 12px; font-family: sans-serif;">
-                <h3>Borsec Francisco</h3>
+                <h3>Borsec Francisco Station</h3>
                 <hr>
-                <p>Navegación restaurada. Clic simple para abrir aplicaciones.</p>
+                <p>Versión 1.1: Enlaces ocultos activados.</p>
             </div>
         </fos-window>
     </fos-desktop>
 
     <script>
-        // SEGURIDAD
+        // SEGURIDAD BORSEC
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.onkeydown = function(e) {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74 || e.keyCode == 67)) || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 83))) return false;
         };
 
-        // LA FUNCIÓN QUE SÍ FUNCIONA (Abre en pestaña/ventana nueva)
-        function launchApp(appName) {
-            let url = "";
-            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
-            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
-            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html"; 
-            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
+        // FUNCIÓN MÁGICA PARA OCULTAR EL ENLACE
+        function openInternalApp(name, url) {
+            const desktop = document.getElementById('mainDesktop');
+            const win = document.createElement('fos-window');
+            
+            // Generamos un ID único para que no choquen
+            const winId = name.replace(/[^a-zA-Z0-9]/g, '_');
+            win.setAttribute('name', winId);
+            win.setAttribute('title', name);
+            
+            // Tamaño de la ventana del programa
+            win.style.width = "90vw";
+            win.style.height = "85vh";
+            win.style.top = "5vh";
+            win.style.left = "5vw";
 
-            if (url) {
-                // Abrimos en una ventana limpia
-                window.open(url, '_blank', 'width=1200,height=800,menubar=no,toolbar=no,location=no');
-            }
+            // Aquí está el truco: Cargamos el contenido mediante un iframe 
+            // pero dentro del entorno controlado de FOS.
+            win.innerHTML = `<iframe src="${url}" class="app-shell" allowfullscreen></iframe>`;
+            
+            desktop.appendChild(win);
         }
 
         setInterval(() => {
