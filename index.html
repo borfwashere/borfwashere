@@ -22,24 +22,12 @@
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
         
-        /* Contenedor de la aplicación */
         .app-container { width: 100%; height: 100%; background: #000; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* ICONOS - Ajustados para ser detectados globalmente */
-        .exe-icon { 
-            cursor: pointer !important; 
-            width: 85px; height: 85px; 
-            text-align: center; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center;
-        }
+        .exe-icon { cursor: pointer; width: 85px; height: 85px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .exe-icon:hover { background: rgba(0,0,0,0.1); outline: 1px dotted #000; }
-        
-        /* Evitamos que el clic se pierda en la imagen o el texto */
-        .exe-icon img, .exe-icon p, .exe-icon span { pointer-events: none; }
+        .exe-icon * { pointer-events: none; }
 
         .folder-content { 
             padding: 20px; background: #fff; height: 100%; 
@@ -61,20 +49,20 @@
         </fos-bar>
 
         <fos-icon href="toys" name="Toys">
-            <div style="pointer-events:none;"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" width="32"></div>
+            <img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png" width="32">
         </fos-icon>
 
         <fos-icon href="programs" name="Programs">
-            <div style="pointer-events:none;"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png" width="32"></div>
+            <img src="https://win98icons.alexmeub.com/icons/png/modem-1.png" width="32">
         </fos-icon>
 
         <fos-window name="toys" title="C:\Borf\Toys">
             <div class="folder-content">
-                <div class="exe-icon" data-app="matrix" data-title="Matrix.exe">
+                <div class="exe-icon" onclick="openGhost('matrix_win', 'https://borfwashere.github.io/matrix/matrix.html')">
                     <img src="https://win98icons.alexmeub.com/icons/png/world-3.png" width="32">
                     <p style="font-size:11px; margin-top:5px;">Matrix.exe</p>
                 </div>
-                <div class="exe-icon" data-app="gifsweeper" data-title="GifSweeper.exe">
+                <div class="exe-icon" onclick="openGhost('gifsweeper_win', 'https://borfwashere.github.io/matrix/gifsweeper.html')">
                     <span style="font-size:24px;">🙂</span>
                     <p style="font-size:11px; margin-top:5px;">GifSweeper.exe</p>
                 </div>
@@ -83,61 +71,59 @@
 
         <fos-window name="programs" title="C:\Borf\Programs">
             <div class="folder-content">
-                <div class="exe-icon" data-app="ruttetra" data-title="Ruttetra.exe">
+                <div class="exe-icon" onclick="openGhost('ruttetra_win', 'https://borfwashere.github.io/ruttetraborf/ruttetraborf.html')">
                     <img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png" width="32">
                     <p style="font-size:11px; margin-top:5px;">Ruttetra.exe</p>
                 </div>
-                <div class="exe-icon" data-app="pixelsort" data-title="Pixelsort.exe">
+                <div class="exe-icon" onclick="openGhost('pixelsort_win', 'https://borfwashere.github.io/ruttetraborf/pixelborf.html')">
                     <img src="https://win98icons.alexmeub.com/icons/png/tree-0.png" width="32">
                     <p style="font-size:11px; margin-top:5px;">Pixelsort.exe</p>
                 </div>
             </div>
         </fos-window>
+
+        <fos-window name="matrix_win" title="Matrix OS" width="900" height="650" visible="false">
+            <div id="cont_matrix" class="app-container"></div>
+        </fos-window>
+
+        <fos-window name="gifsweeper_win" title="GifSweeper" width="400" height="550" visible="false">
+            <div id="cont_gifsweeper" class="app-container"></div>
+        </fos-window>
+
+        <fos-window name="ruttetra_win" title="Ruttetra" width="900" height="650" visible="false">
+            <div id="cont_ruttetra" class="app-container"></div>
+        </fos-window>
+
+        <fos-window name="pixelsort_win" title="PixelSort" width="900" height="650" visible="false">
+            <div id="cont_pixelsort" class="app-container"></div>
+        </fos-window>
+
     </fos-desktop>
 
     <script>
+        // Función que activa la ventana fantasma e inyecta el iframe
+        function openGhost(winName, url) {
+            const win = document.querySelector(`fos-window[name="${winName}"]`);
+            const containerId = "cont_" + winName.replace('_win', '');
+            const container = document.getElementById(containerId);
+
+            if (win && container) {
+                // Solo inyectamos el iframe si el contenedor está vacío
+                if (container.innerHTML === "") {
+                    container.innerHTML = `<iframe src="${url}"></iframe>`;
+                }
+                
+                // Forzamos a FOS a mostrar y activar la ventana
+                win.setAttribute('visible', 'true');
+                win.setAttribute('active', 'true');
+            }
+        }
+
         // Reloj
         setInterval(() => {
             const clock = document.getElementById('clock');
             if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
         }, 1000);
-
-        // DETECTOR GLOBAL DE CLIC (Esto ignora si FOS intenta bloquearlo)
-        document.addEventListener('click', function(e) {
-            // Buscamos si el clic fue en un elemento con la clase .exe-icon
-            const target = e.target.closest('.exe-icon');
-            if (!target) return;
-
-            const appName = target.getAttribute('data-app');
-            const title = target.getAttribute('data-title');
-            
-            const desktop = document.querySelector('fos-desktop');
-            const winId = "app_" + appName;
-
-            // Si ya existe, traerla al frente
-            let existing = document.querySelector(`fos-window[name="${winId}"]`);
-            if (existing) {
-                existing.setAttribute('active', 'true');
-                return;
-            }
-
-            let url = "";
-            if (appName === 'matrix') url = "https://borfwashere.github.io/matrix/matrix.html";
-            else if (appName === 'gifsweeper') url = "https://borfwashere.github.io/matrix/gifsweeper.html";
-            else if (appName === 'ruttetra') url = "https://borfwashere.github.io/ruttetraborf/ruttetraborf.html";
-            else if (appName === 'pixelsort') url = "https://borfwashere.github.io/ruttetraborf/pixelborf.html";
-
-            if (url) {
-                const win = document.createElement('fos-window');
-                win.setAttribute('name', winId);
-                win.setAttribute('title', title);
-                win.setAttribute('active', 'true');
-                win.setAttribute('width', '800');
-                win.setAttribute('height', '600');
-                win.innerHTML = `<div class="app-container"><iframe src="${url}"></iframe></div>`;
-                desktop.appendChild(win);
-            }
-        });
     </script>
 </body>
 </html>
