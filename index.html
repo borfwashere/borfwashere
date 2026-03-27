@@ -9,7 +9,6 @@
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
     <style>
-        /* 1. RESET DE INTERFAZ Y DESFASE */
         * { box-sizing: border-box; }
         #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
 
@@ -22,45 +21,30 @@
         }
 
         #mainDesktop { position: absolute !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
-
-        /* 2. ESCALA Y ALINEACIÓN DE ICONOS */
-        fos-icon { width: 80px !important; height: 80px !important; }
+        fos-icon { width: 80px !important; height: 80px !important; cursor: pointer; }
 
         .icon-box {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
             margin: 0 auto 4px auto;
         }
 
         .icon-box img { width: 32px; height: 32px; image-rendering: pixelated; }
         .icon-box span { font-size: 24px; line-height: 1; }
 
-        /* 3. CONTENIDO DE CARPETAS */
         .folder-content { 
-            padding: 20px; 
-            background: #fff; 
-            height: 100%; 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); 
-            gap: 15px;
+            padding: 20px; background: #fff; height: 100%; 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
             overflow-y: auto;
         }
 
-        .folder-content fos-icon {
-            position: relative !important;
-            top: auto !important; left: auto !important;
-            margin: 0 auto !important;
-        }
-
-        /* 4. BARRA DE TAREAS Y RELOJ */
+        .folder-content fos-icon { position: relative !important; top: auto !important; left: auto !important; margin: 0 auto !important; }
+        
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
         
-        /* 5. VISOR DE APLICACIONES CON PERMISOS */
-        iframe { width: 100%; height: 100%; border: none; background: #000; display: block; }
+        .app-shell { width: 100%; height: 100%; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; display: block; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -106,26 +90,61 @@
             </div>
         </fos-window>
 
-        <fos-window name="win_matrix" title="Matrix.exe" width="900" height="600" visible="false">
-            <iframe src="https://borfwashere.github.io/matrix/matrix.html" allow="camera; microphone; display-capture"></iframe>
+        <fos-window name="win_matrix" title="Matrix.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/matrix.html">
+            <div class="app-shell"></div>
         </fos-window>
 
-        <fos-window name="win_gifsweeper" title="GifSweeper.exe" width="500" height="600" visible="false">
-            <iframe src="https://borfwashere.github.io/matrix/gifsweeper.html" allow="camera; microphone; display-capture"></iframe>
+        <fos-window name="win_gifsweeper" title="GifSweeper.exe" width="500" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/gifsweeper.html">
+            <div class="app-shell"></div>
         </fos-window>
 
-        <fos-window name="win_ruttetra" title="Ruttetra.exe" width="900" height="600" visible="false">
-            <iframe src="https://borfwashere.github.io/ruttetraborf/ruttetraborf.html" allow="camera; microphone; display-capture"></iframe>
+        <fos-window name="win_ruttetra" title="Ruttetra.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/ruttetraborf/ruttetraborf.html">
+            <div class="app-shell"></div>
         </fos-window>
 
-        <fos-window name="win_pixelsort" title="PixelSort.exe" width="900" height="600" visible="false">
-            <iframe src="https://borfwashere.github.io/ruttetraborf/pixelborf.html" allow="camera; microphone; display-capture"></iframe>
+        <fos-window name="win_pixelsort" title="PixelSort.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/ruttetraborf/pixelborf.html">
+            <div class="app-shell"></div>
         </fos-window>
 
     </fos-desktop>
 
     <script>
-        // Reloj de Sistema
+        document.addEventListener('mousedown', (e) => {
+            const icon = e.target.closest('fos-icon');
+            const closeBtn = e.target.closest('.fos-window-title-button[data-action="close"]');
+
+            if (icon) {
+                const winName = icon.getAttribute('href');
+                const win = document.querySelector(`fos-window[name="${winName}"]`);
+                
+                if (win && winName.startsWith('win_')) {
+                    // Acción de maximizar antes de cargar el contenido
+                    if(typeof win.maximize === 'function') {
+                        win.maximize();
+                    }
+
+                    const shell = win.querySelector('.app-shell');
+                    const url = win.getAttribute('data-repo');
+                    
+                    setTimeout(() => {
+                        if (shell && shell.innerHTML === "") {
+                            shell.innerHTML = `<iframe src="${url}" allow="camera; microphone; display-capture"></iframe>`;
+                        }
+                    }, 350);
+                }
+            }
+
+            if (closeBtn) {
+                const win = closeBtn.closest('fos-window');
+                if (win && win.getAttribute('name').startsWith('win_')) {
+                    const shell = win.querySelector('.app-shell');
+                    if (shell) {
+                        shell.innerHTML = ""; 
+                    }
+                }
+            }
+        });
+
         setInterval(() => {
             const clock = document.getElementById('clock');
             if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
