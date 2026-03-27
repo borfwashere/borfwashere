@@ -30,7 +30,12 @@
         }
         .icon-box img { width: 32px; height: 32px; image-rendering: pixelated; }
 
-        .app-shell { width: 100%; height: 100%; background: #fff; position: relative; }
+        .app-shell { 
+            width: 100%; height: 100%; 
+            background: #fff; 
+            position: relative; 
+        }
+        
         iframe { width: 100%; height: 100%; border: none; display: block; background: transparent; }
 
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
@@ -44,7 +49,7 @@
             <fos-menu name="Start">
                 <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
                 <hr>
-                <fos-menu-item href="win_3d_explorer">3D Explorer</fos-menu-item>
+                <fos-menu-item href="win_3d_explorer">Reality-Editor 3D</fos-menu-item>
                 <fos-menu-item href="toys">Toys</fos-menu-item>
                 <fos-menu-item href="win_images">Images</fos-menu-item>
             </fos-menu>
@@ -63,14 +68,17 @@
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div>
         </fos-icon>
 
-        <fos-window name="win_3d_explorer" title="3D Explorer" width="1050" height="750" visible="false" data-repo="https://borfwashere.github.io/3dmodel/3dexplorer.html">
+        <fos-window name="win_3d_explorer" title="Reality-Editor v1.0" width="1050" height="750" visible="false" data-repo="https://borfwashere.github.io/3dmodel/3dexplorer.html">
             <div class="app-shell"></div>
         </fos-window>
 
         <fos-window name="toys" title="C:\Borf\Toys" width="500" height="350">
-            <div class="folder-content" style="padding:20px; display:flex; gap:10px;">
+            <div class="folder-content">
                 <fos-icon href="win_matrix" name="Matrix.exe">
                     <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-3.png"></div>
+                </fos-icon>
+                <fos-icon href="win_gifsweeper" name="GifSweeper.exe">
+                    <div class="icon-box"><span>🙂</span></div>
                 </fos-icon>
             </div>
         </fos-window>
@@ -80,6 +88,10 @@
         </fos-window>
 
         <fos-window name="win_matrix" title="Matrix.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/matrix.html">
+            <div class="app-shell"></div>
+        </fos-window>
+
+        <fos-window name="win_gifsweeper" title="GifSweeper.exe" width="500" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/gifsweeper.html">
             <div class="app-shell"></div>
         </fos-window>
 
@@ -104,8 +116,8 @@
                         
                         if (shell && shell.innerHTML.trim() === "") {
                             setTimeout(() => {
-                                shell.innerHTML = `<iframe src="${url}" allow="autoplay; camera; microphone; display-capture"></iframe>`;
-                            }, 100);
+                                shell.innerHTML = `<iframe src="${url}" allow="camera; microphone; display-capture; autoplay"></iframe>`;
+                            }, 150);
                         }
                     }
                 }
@@ -121,6 +133,7 @@
             }
         });
 
+        // Reloj
         setInterval(() => {
             const clock = document.getElementById('clock');
             if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
