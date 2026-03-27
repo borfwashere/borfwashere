@@ -28,23 +28,18 @@
             display: flex; align-items: center; justify-content: center;
             margin: 0 auto 4px auto;
         }
-
         .icon-box img { width: 32px; height: 32px; image-rendering: pixelated; }
-        .icon-box span { font-size: 24px; line-height: 1; }
 
-        .folder-content { 
-            padding: 20px; background: #fff; height: 100%; 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 15px;
-            overflow-y: auto;
+        .app-shell { 
+            width: 100%; height: 100%; 
+            background: #fff; 
+            position: relative; 
         }
-
-        .folder-content fos-icon { position: relative !important; top: auto !important; left: auto !important; margin: 0 auto !important; }
         
+        iframe { width: 100%; height: 100%; border: none; display: block; background: transparent; }
+
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
-        
-        .app-shell { width: 100%; height: 100%; background: #000; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; display: block; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -54,11 +49,16 @@
             <fos-menu name="Start">
                 <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
                 <hr>
+                <fos-menu-item href="win_3d_explorer">Reality-Editor 3D</fos-menu-item>
                 <fos-menu-item href="toys">Toys</fos-menu-item>
                 <fos-menu-item href="win_images">Images</fos-menu-item>
             </fos-menu>
             <div id="clock">00:00</div>
         </fos-bar>
+
+        <fos-icon href="win_3d_explorer" name="3D Explorer">
+            <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></div>
+        </fos-icon>
 
         <fos-icon href="toys" name="Toys">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
@@ -67,6 +67,10 @@
         <fos-icon href="win_images" name="Images">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div>
         </fos-icon>
+
+        <fos-window name="win_3d_explorer" title="Reality-Editor v1.0" width="1050" height="750" visible="false" data-repo="https://borfwashere.github.io/3dmodel/3dexplorer.html">
+            <div class="app-shell"></div>
+        </fos-window>
 
         <fos-window name="toys" title="C:\Borf\Toys" width="500" height="350">
             <div class="folder-content">
@@ -102,19 +106,20 @@
                 const winName = icon.getAttribute('href');
                 const win = document.querySelector(`fos-window[name="${winName}"]`);
                 
-                if (win && winName.startsWith('win_')) {
-                    // Maximizar automáticamente para aprovechar el espacio
-                    if(typeof win.maximize === 'function') win.maximize();
+                if (win) {
+                    win.setAttribute('visible', 'true');
+                    if (typeof win.bringToFront === 'function') win.bringToFront();
                     
-                    const shell = win.querySelector('.app-shell');
-                    const url = win.getAttribute('data-repo');
-                    
-                    // Retraso pequeño para que la animación de apertura no se trabe
-                    setTimeout(() => {
-                        if (shell && shell.innerHTML === "") {
-                            shell.innerHTML = `<iframe src="${url}" allow="camera; microphone; display-capture"></iframe>`;
+                    if (winName.startsWith('win_')) {
+                        const shell = win.querySelector('.app-shell');
+                        const url = win.getAttribute('data-repo');
+                        
+                        if (shell && shell.innerHTML.trim() === "") {
+                            setTimeout(() => {
+                                shell.innerHTML = `<iframe src="${url}" allow="camera; microphone; display-capture; autoplay"></iframe>`;
+                            }, 150);
                         }
-                    }, 350);
+                    }
                 }
             }
 
@@ -123,11 +128,12 @@
                 if (win && win.getAttribute('name').startsWith('win_')) {
                     const shell = win.querySelector('.app-shell');
                     if (shell) shell.innerHTML = ""; 
+                    win.setAttribute('visible', 'false');
                 }
             }
         });
 
-        // Reloj de la barra de tareas
+        // Reloj
         setInterval(() => {
             const clock = document.getElementById('clock');
             if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
