@@ -55,7 +55,7 @@
                 <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
                 <hr>
                 <fos-menu-item href="toys">Toys</fos-menu-item>
-                <fos-menu-item href="programs">Programs</fos-menu-item>
+                <fos-menu-item href="win_images">Images</fos-menu-item>
             </fos-menu>
             <div id="clock">00:00</div>
         </fos-bar>
@@ -64,8 +64,8 @@
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
         </fos-icon>
 
-        <fos-icon href="programs" name="Programs">
-            <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/modem-1.png"></div>
+        <fos-icon href="win_images" name="Images">
+            <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div>
         </fos-icon>
 
         <fos-window name="toys" title="C:\Borf\Toys" width="500" height="350">
@@ -79,15 +79,8 @@
             </div>
         </fos-window>
 
-        <fos-window name="programs" title="C:\Borf\Programs" width="500" height="350">
-            <div class="folder-content">
-                <fos-icon href="win_ruttetra" name="Ruttetra.exe">
-                    <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/console_prompt-0.png"></div>
-                </fos-icon>
-                <fos-icon href="win_pixelsort" name="PixelSort.exe">
-                    <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/tree-0.png"></div>
-                </fos-icon>
-            </div>
+        <fos-window name="win_images" title="Images Program" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/Images/images.html">
+            <div class="app-shell"></div>
         </fos-window>
 
         <fos-window name="win_matrix" title="Matrix.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/matrix.html">
@@ -98,19 +91,11 @@
             <div class="app-shell"></div>
         </fos-window>
 
-        <fos-window name="win_ruttetra" title="Ruttetra.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/ruttetraborf/ruttetraborf.html">
-            <div class="app-shell"></div>
-        </fos-window>
-
-        <fos-window name="win_pixelsort" title="PixelSort.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/ruttetraborf/pixelborf.html">
-            <div class="app-shell"></div>
-        </fos-window>
-
     </fos-desktop>
 
     <script>
         document.addEventListener('mousedown', (e) => {
-            const icon = e.target.closest('fos-icon');
+            const icon = e.target.closest('fos-icon') || e.target.closest('fos-menu-item');
             const closeBtn = e.target.closest('.fos-window-title-button[data-action="close"]');
 
             if (icon) {
@@ -118,14 +103,13 @@
                 const win = document.querySelector(`fos-window[name="${winName}"]`);
                 
                 if (win && winName.startsWith('win_')) {
-                    // Acción de maximizar antes de cargar el contenido
-                    if(typeof win.maximize === 'function') {
-                        win.maximize();
-                    }
-
+                    // Maximizar automáticamente para aprovechar el espacio
+                    if(typeof win.maximize === 'function') win.maximize();
+                    
                     const shell = win.querySelector('.app-shell');
                     const url = win.getAttribute('data-repo');
                     
+                    // Retraso pequeño para que la animación de apertura no se trabe
                     setTimeout(() => {
                         if (shell && shell.innerHTML === "") {
                             shell.innerHTML = `<iframe src="${url}" allow="camera; microphone; display-capture"></iframe>`;
@@ -138,13 +122,12 @@
                 const win = closeBtn.closest('fos-window');
                 if (win && win.getAttribute('name').startsWith('win_')) {
                     const shell = win.querySelector('.app-shell');
-                    if (shell) {
-                        shell.innerHTML = ""; 
-                    }
+                    if (shell) shell.innerHTML = ""; 
                 }
             }
         });
 
+        // Reloj de la barra de tareas
         setInterval(() => {
             const clock = document.getElementById('clock');
             if(clock) clock.innerText = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
