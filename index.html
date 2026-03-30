@@ -39,7 +39,7 @@
 
         .icon-box img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
 
-        /* ICONOS DEL MENÚ START (CORREGIDOS) */
+        /* ICONOS DEL MENÚ START */
         .menu-icon-small {
             width: 16px; height: 16px; 
             display: inline-flex;
@@ -141,11 +141,26 @@
     <script>
         function randomizeIcons() {
             const icons = document.querySelectorAll('#mainDesktop > fos-icon.draggable-icon');
+            const iconWidth = 80;
+            const iconHeight = 90;
+            const barHeight = 40; // Espacio reservado para la barra inferior
+            const padding = 20;
+
             icons.forEach(icon => {
-                const maxX = window.innerWidth - 150;
-                const maxY = window.innerHeight - 150;
-                icon.style.left = (Math.random() * maxX + 100) + 'px';
-                icon.style.top = (Math.random() * maxY + 20) + 'px';
+                // El límite X debe considerar el ancho del icono para que no se desborde a la derecha
+                const maxX = window.innerWidth - iconWidth - padding;
+                // El límite Y debe considerar el alto del icono y la barra de tareas
+                const maxY = window.innerHeight - iconHeight - barHeight - padding;
+                
+                // Evitamos que los iconos aleatorios tapen la columna izquierda fija (aprox 120px)
+                const minX = 120;
+                const minY = padding;
+
+                const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+                const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
+
+                icon.style.left = randomX + 'px';
+                icon.style.top = randomY + 'px';
             });
         }
         window.addEventListener('load', randomizeIcons);
