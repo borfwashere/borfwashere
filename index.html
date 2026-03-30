@@ -24,25 +24,40 @@
         
         fos-icon { 
             width: 80px !important; 
-            height: 80px !important; 
+            height: 90px !important; 
             cursor: pointer; 
-            position: absolute !important; 
+            position: absolute !important;
+            display: block !important;
         }
 
         .icon-box {
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 4px auto;
+            width: 32px; 
+            height: 32px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            margin: 0 auto;
         }
-        .icon-box img { width: 32px; height: 32px; image-rendering: pixelated; }
+
+        .icon-box img { 
+            width: 32px !important; 
+            height: 32px !important; 
+            display: block !important;
+            image-rendering: pixelated; 
+        }
 
         .app-shell { 
             width: 100%; height: 100%; 
-            background: #fff; 
-            position: relative; 
+            background: #000; 
+            display: flex;
         }
         
-        iframe { width: 100%; height: 100%; border: none; display: block; background: transparent; }
+        iframe { 
+            width: 100% !important; 
+            height: 100% !important; 
+            border: none; 
+            flex-grow: 1;
+        }
 
         fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
@@ -57,6 +72,14 @@
             <fos-menu name="Start">
                 <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
                 <hr>
+                <fos-menu-item href="win_screensaver">
+                    <img src="https://win98icons.alexmeub.com/icons/png/channels_screen_saver-2.png" style="width:16px;height:16px;vertical-align:middle;margin-right:8px;image-rendering:pixelated;">
+                    Screensaver (3D)
+                </fos-menu-item>
+                <fos-menu-item href="win_dit">
+                    <img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png" style="width:16px;height:16px;vertical-align:middle;margin-right:8px;image-rendering:pixelated;">
+                    DIT Engine
+                </fos-menu-item>
                 <fos-menu-item href="win_pimpmypaint">
                     <img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png" style="width:16px;height:16px;vertical-align:middle;margin-right:8px;image-rendering:pixelated;">
                     pimpmypaint
@@ -71,6 +94,18 @@
             </fos-menu>
             <div id="clock">00:00</div>
         </fos-bar>
+
+        <fos-icon href="win_screensaver" name="Screensaver" class="draggable-icon">
+            <div class="icon-box">
+                <img src="https://win98icons.alexmeub.com/icons/png/channels_screen_saver-2.png" alt="Icon">
+            </div>
+        </fos-icon>
+
+        <fos-icon href="win_dit" name="DIT" class="draggable-icon">
+            <div class="icon-box">
+                <img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png" alt="Icon">
+            </div>
+        </fos-icon>
 
         <fos-icon href="win_pimpmypaint" name="pimpmypaint" class="draggable-icon">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></div>
@@ -91,6 +126,14 @@
         <fos-icon href="toys" name="Toys" class="draggable-icon">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div>
         </fos-icon>
+
+        <fos-window name="win_screensaver" title="3D Maze Screensaver" width="1000" height="700" visible="false" data-repo="https://borfwashere.github.io/screensaver/screensaver.html">
+            <div class="app-shell"></div>
+        </fos-window>
+
+        <fos-window name="win_dit" title="DIT Project" width="850" height="650" visible="false" data-repo="https://borfwashere.github.io/dit/dit.html">
+            <div class="app-shell"></div>
+        </fos-window>
 
         <fos-window name="win_pimpmypaint" title="pimpmypaint" width="960" height="680" visible="false" data-repo="https://borfwashere.github.io/pimpmypaint/">
             <div class="app-shell"></div>
@@ -134,7 +177,7 @@
             const icons = document.querySelectorAll('#mainDesktop > fos-icon.draggable-icon');
             const padding = 20;
             const barHeight = 40;
-            const iconW = 80, iconH = 80;
+            const iconW = 80, iconH = 90;
 
             icons.forEach(icon => {
                 const maxX = window.innerWidth - iconW - padding;
@@ -161,26 +204,27 @@
                     win.setAttribute('visible', 'true');
                     if (typeof win.bringToFront === 'function') win.bringToFront();
                     
-                    // Inyección de iconos en la barra de título (Webscape e Images)
                     const titleText = win.shadowRoot.querySelector('.fos-window-title-text');
                     if (titleText && !titleText.querySelector('img')) {
                         let iconUrl = "";
                         if (winName === 'win_webscape') iconUrl = "https://win98icons.alexmeub.com/icons/png/world-1.png";
                         if (winName === 'win_images') iconUrl = "https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png";
                         if (winName === 'win_pimpmypaint') iconUrl = "https://win98icons.alexmeub.com/icons/png/paint_old-0.png";
+                        if (winName === 'win_dit') iconUrl = "https://win98icons.alexmeub.com/icons/png/search_file-2.png";
+                        // Mantener el mismo icono de monitor en la barra de título
+                        if (winName === 'win_screensaver') iconUrl = "https://win98icons.alexmeub.com/icons/png/channels_screen_saver-2.png";
                         
                         if (iconUrl) {
                             titleText.innerHTML = `<img src="${iconUrl}" style="width:16px;height:16px;vertical-align:middle;margin-right:6px;image-rendering:pixelated;"> ${win.getAttribute('title')}`;
                         }
                     }
 
-                    // Carga de Apps
                     if (winName.startsWith('win_')) {
                         const shell = win.querySelector('.app-shell');
                         const url = win.getAttribute('data-repo');
                         if (shell && shell.innerHTML.trim() === "") {
                             setTimeout(() => {
-                                shell.innerHTML = `<iframe src="${url}" allow="camera; microphone; display-capture; autoplay"></iframe>`;
+                                shell.innerHTML = `<iframe src="${url}" allow="camera; microphone; display-capture; autoplay" style="width:100%; height:100%; border:none;"></iframe>`;
                             }, 150);
                         }
                     }
