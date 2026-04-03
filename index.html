@@ -12,7 +12,6 @@
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent; 
-            touch-action: manipulation;
             user-select: none !important;
             -webkit-user-select: none !important;
         }
@@ -31,7 +30,6 @@
             overflow: hidden !important;
             position: fixed;
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
-            font-family: sans-serif;
             left: 0; top: 0;
             touch-action: none;
         }
@@ -44,6 +42,10 @@
             display: flex !important; flex-direction: column;
             align-items: center; justify-content: center;
         }
+
+        /* BLOQUEO FÍSICO INAMOVIBLE */
+        #trash-bin { top: 20px !important; left: 20px !important; }
+        #readme-icon { top: 120px !important; left: 20px !important; }
 
         .icon-box { width: 32px; height: 32px; display: flex !important; align-items: center; justify-content: center; margin-bottom: 4px; font-size: 24px; }
         .icon-box img { width: 32px !important; height: 32px !important; image-rendering: pixelated; pointer-events: none; }
@@ -83,11 +85,11 @@
             <div id="clock">00:00</div>
         </fos-bar>
 
-        <fos-icon id="trash-bin" name="Recycle Bin" style="top: 20px; left: 20px;">
+        <fos-icon id="trash-bin" name="Recycle Bin">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/recycle_bin_full-4.png"></div>
         </fos-icon>
 
-        <fos-icon href="win_help" name="README.txt" style="top: 120px; left: 20px;">
+        <fos-icon id="readme-icon" href="win_help" name="README.txt">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"></div>
         </fos-icon>
 
@@ -123,7 +125,6 @@
         <fos-window name="win_webscape" title="Webscape" width="900" height="650" visible="false" data-repo="https://borfwashere.github.io/web/webscape.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_3d_explorer" title="Reality-Editor v1.0" width="1050" height="750" visible="false" data-repo="https://borfwashere.github.io/3dmodel/3dexplorer.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_images" title="Images" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/Images/images.html"><div class="app-shell"></div></fos-window>
-        
         <fos-window name="toys" title="C:\Borf\Toys" width="500" height="350" visible="false">
             <div style="padding:10px; display:flex; gap:10px; flex-wrap:wrap;">
                 <fos-icon href="win_matrix" name="Matrix.exe" style="position:relative !important;"><div class="icon-box">🌐</div></fos-icon>
@@ -136,7 +137,7 @@
     </fos-desktop>
 
     <script>
-        // SEGURIDAD
+        // SEGURIDAD DE CÓDIGO
         document.addEventListener('keydown', e => {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) {
                 e.preventDefault(); return false;
@@ -161,22 +162,32 @@
             });
         }
 
-        // CONTROL UNIFICADO (MOUSE + TOUCH)
         let lastTap = 0;
         const mainHandler = (e) => {
             const path = e.composedPath();
             const trash = path.find(el => el && el.id === 'trash-bin');
+            const readme = path.find(el => el && el.id === 'readme-icon');
             const now = Date.now();
+            const isDouble = (e.detail === 2 || (now - lastTap < 300));
 
+            // Lógica para Papelera
             if (trash) {
-                if (now - lastTap < 300) { killAll(); }
+                if (isDouble) { killAll(); }
                 lastTap = now;
-                e.preventDefault();
                 return;
             }
 
+            // Lógica para el README fijo
+            if (readme && isDouble) {
+                const win = document.querySelector('fos-window[name="win_help"]');
+                if (win) win.setAttribute('visible', 'true');
+                lastTap = now;
+                return;
+            }
+
+            // Lógica para iconos draggables y menú
             const icon = e.target.closest('fos-icon') || e.target.closest('fos-menu-item');
-            if (icon && icon.id !== 'trash-bin') {
+            if (icon && icon.id !== 'trash-bin' && icon.id !== 'readme-icon') {
                 const winName = icon.getAttribute('href');
                 const win = document.querySelector(`fos-window[name="${winName}"]`);
                 if (win) {
@@ -188,16 +199,11 @@
                     }
                 }
             }
-
-            const closeBtn = path.find(el => el.classList && el.classList.contains('fos-window-title-button') && el.dataset.action === "close");
-            if (closeBtn) {
-                const win = closeBtn.getRootNode().host || path.find(el => el.tagName === 'FOS-WINDOW');
-                killAll(win);
-            }
+            lastTap = now;
         };
 
-        document.addEventListener('touchstart', mainHandler, {passive: false});
         document.addEventListener('mousedown', mainHandler);
+        document.addEventListener('touchstart', mainHandler, {passive: true});
 
         setInterval(() => {
             const clock = document.getElementById('clock');
