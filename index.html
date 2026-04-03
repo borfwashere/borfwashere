@@ -9,17 +9,14 @@
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
     <style>
-        /* PROTECCIÓN DE INTERFAZ */
         * { 
             box-sizing: border-box; 
             -webkit-tap-highlight-color: transparent; 
+            touch-action: manipulation;
             user-select: none !important;
             -webkit-user-select: none !important;
-            -ms-user-select: none !important;
-            -moz-user-select: none !important;
         }
 
-        /* PERMITIR SELECCIÓN SOLO EN EL NOTEPAD */
         .readme-content, .readme-content * {
             user-select: text !important;
             -webkit-user-select: text !important;
@@ -30,15 +27,16 @@
         body, html { 
             background-color: #008080 !important; 
             margin: 0; padding: 0; 
-            width: 100vw; height: 100vh; 
+            width: 100%; height: 100%; 
             overflow: hidden !important;
             position: fixed;
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
             font-family: sans-serif;
             left: 0; top: 0;
+            touch-action: none;
         }
 
-        #mainDesktop { position: absolute !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
+        #mainDesktop { position: absolute !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; overflow: hidden !important; }
         
         fos-icon { 
             width: 80px !important; height: 90px !important; 
@@ -47,59 +45,40 @@
             align-items: center; justify-content: center;
         }
 
-        .icon-box {
-            width: 32px; height: 32px;
-            display: flex !important; align-items: center; justify-content: center;
-            margin-bottom: 4px; font-size: 24px;
-        }
-
+        .icon-box { width: 32px; height: 32px; display: flex !important; align-items: center; justify-content: center; margin-bottom: 4px; font-size: 24px; }
         .icon-box img { width: 32px !important; height: 32px !important; image-rendering: pixelated; pointer-events: none; }
-
-        .menu-icon-small {
-            width: 16px; height: 16px; 
-            display: inline-flex;
-            align-items: center; justify-content: center;
-            margin-right: 8px; vertical-align: middle;
-        }
-        .menu-icon-small img { width: 16px !important; height: 16px !important; image-rendering: pixelated; }
 
         .app-shell { width: 100%; height: 100%; background: #000; display: flex; }
         iframe { width: 100% !important; height: 100% !important; border: none; }
 
-        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; z-index: 10000; position: absolute; bottom: 0; width: 100%; }
-        #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
+        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; z-index: 10000; position: absolute; bottom: 0; width: 100%; height: 40px; }
+        #clock { color: #000; padding: 0 10px; line-height: 40px; font-size: 11px; border-left: 1px solid #808080; }
         
-        .readme-content { 
-            padding: 20px; background: #fff; color: #000; 
-            font-family: "Courier New", Courier, monospace; 
-            height: 100%; overflow-y: auto; line-height: 1.4;
-        }
-        .readme-content h1 { font-size: 18px; border-bottom: 2px solid #000; margin-bottom: 10px; }
-        .readme-content h2 { font-size: 15px; text-decoration: underline; margin-top: 15px; }
-        .folder-content { padding: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
-
+        .readme-content { padding: 20px; background: #fff; color: #000; font-family: "Courier New", Courier, monospace; height: 100%; overflow-y: auto; }
+        
         @media (max-width: 600px) {
-            fos-window { width: 96vw !important; height: 82dvh !important; top: 2dvh !important; left: 2vw !important; }
+            fos-window { width: 96vw !important; height: 80dvh !important; top: 2dvh !important; left: 2vw !important; }
+            fos-icon { width: 70px !important; height: 80px !important; }
         }
     </style>
 </head>
-<body oncontextmenu="return false;" onkeydown="return false;">
+<body oncontextmenu="return false;">
 
     <fos-desktop id="mainDesktop">
         <fos-bar>
             <fos-menu name="Start">
                 <div style="padding: 5px 10px; font-weight: bold; background: #000080; color: white;">Borsec Francisco</div>
                 <hr>
-                <fos-menu-item href="win_kimsort"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png"></span> KimSort</fos-menu-item>
-                <fos-menu-item href="win_ruttetra"><span class="menu-icon-small">📼</span> RutTetra Video</fos-menu-item>
-                <fos-menu-item href="win_screensaver"><span class="menu-icon-small">🖥️</span> Screensaver</fos-menu-item>
-                <fos-menu-item href="win_dit"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png"></span> DIT Engine</fos-menu-item>
-                <fos-menu-item href="win_pimpmypaint"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></span> PimpMyPaint</fos-menu-item>
-                <fos-menu-item href="win_webscape"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></span> Webscape</fos-menu-item>
-                <fos-menu-item href="win_3d_explorer"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></span> 3D Explorer</fos-menu-item>
-                <fos-menu-item href="win_images"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></span> Images</fos-menu-item>
-                <fos-menu-item href="win_help"><span class="menu-icon-small">📖</span> README.txt</fos-menu-item>
-                <fos-menu-item href="toys"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></span> Toys</fos-menu-item>
+                <fos-menu-item href="win_kimsort">KimSort</fos-menu-item>
+                <fos-menu-item href="win_ruttetra">RutTetra Video</fos-menu-item>
+                <fos-menu-item href="win_screensaver">Screensaver</fos-menu-item>
+                <fos-menu-item href="win_dit">DIT Engine</fos-menu-item>
+                <fos-menu-item href="win_pimpmypaint">PimpMyPaint</fos-menu-item>
+                <fos-menu-item href="win_webscape">Webscape</fos-menu-item>
+                <fos-menu-item href="win_3d_explorer">3D Explorer</fos-menu-item>
+                <fos-menu-item href="win_images">Images</fos-menu-item>
+                <fos-menu-item href="win_help">README.txt</fos-menu-item>
+                <fos-menu-item href="toys">Toys</fos-menu-item>
             </fos-menu>
             <div id="clock">00:00</div>
         </fos-bar>
@@ -116,8 +95,8 @@
         <fos-icon href="win_ruttetra" name="RutTetra" class="draggable-icon"><div class="icon-box">📼</div></fos-icon>
         <fos-icon href="win_screensaver" name="Screensaver" class="draggable-icon"><div class="icon-box">🖥️</div></fos-icon>
         <fos-icon href="win_dit" name="DIT" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png"></div></fos-icon>
-        <fos-icon href="win_pimpmypaint" name="pimpmypaint" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></div></fos-icon>
-        <fos-icon href="win_webscape" name="webscape" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></div></fos-icon>
+        <fos-icon href="win_pimpmypaint" name="Paint" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></div></fos-icon>
+        <fos-icon href="win_webscape" name="Webscape" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></div></fos-icon>
         <fos-icon href="win_3d_explorer" name="3D Explorer" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></div></fos-icon>
         <fos-icon href="win_images" name="Images" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div></fos-icon>
         <fos-icon href="toys" name="Toys" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div></fos-icon>
@@ -140,12 +119,13 @@
         <fos-window name="win_ruttetra" title="RutTetra" width="800" height="600" visible="false" data-repo="https://borfwashere.github.io/ruttetra/ruttetra.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_screensaver" title="3D Maze" width="1000" height="700" visible="false" data-repo="https://borfwashere.github.io/screensaver/screensaver.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_dit" title="DIT Project" width="850" height="650" visible="false" data-repo="https://borfwashere.github.io/dit/dit.html"><div class="app-shell"></div></fos-window>
-        <fos-window name="win_pimpmypaint" title="pimpmypaint" width="960" height="680" visible="false" data-repo="https://borfwashere.github.io/pimpmypaint/"><div class="app-shell"></div></fos-window>
-        <fos-window name="win_webscape" title="webscape" width="900" height="650" visible="false" data-repo="https://borfwashere.github.io/web/webscape.html"><div class="app-shell"></div></fos-window>
+        <fos-window name="win_pimpmypaint" title="PimpMyPaint" width="960" height="680" visible="false" data-repo="https://borfwashere.github.io/pimpmypaint/"><div class="app-shell"></div></fos-window>
+        <fos-window name="win_webscape" title="Webscape" width="900" height="650" visible="false" data-repo="https://borfwashere.github.io/web/webscape.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_3d_explorer" title="Reality-Editor v1.0" width="1050" height="750" visible="false" data-repo="https://borfwashere.github.io/3dmodel/3dexplorer.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_images" title="Images" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/Images/images.html"><div class="app-shell"></div></fos-window>
+        
         <fos-window name="toys" title="C:\Borf\Toys" width="500" height="350" visible="false">
-            <div class="folder-content">
+            <div style="padding:10px; display:flex; gap:10px; flex-wrap:wrap;">
                 <fos-icon href="win_matrix" name="Matrix.exe" style="position:relative !important;"><div class="icon-box">🌐</div></fos-icon>
                 <fos-icon href="win_gifsweeper" name="GifSweeper.exe" style="position:relative !important;"><div class="icon-box">🙂</div></fos-icon>
             </div>
@@ -156,50 +136,43 @@
     </fos-desktop>
 
     <script>
-        // PROTECCIÓN DE CÓDIGO E INSPECTOR
+        // SEGURIDAD
         document.addEventListener('keydown', e => {
-            // Bloquear F12, Ctrl+Shift+I, J, C y Ctrl+U
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) {
-                e.preventDefault();
-                return false;
+                e.preventDefault(); return false;
             }
         });
 
-        // Bloqueo de arrastre de imágenes
-        document.addEventListener('dragstart', e => { if (e.target.tagName === 'IMG') e.preventDefault(); });
-
         function randomizeIcons() {
-            const icons = document.querySelectorAll('#mainDesktop > fos-icon.draggable-icon');
-            const iconWidth = 80; const iconHeight = 90; const barHeight = 40; const padding = 20;
+            const icons = document.querySelectorAll('.draggable-icon');
             icons.forEach(icon => {
-                const maxX = window.innerWidth - iconWidth - padding;
-                const maxY = window.innerHeight - iconHeight - barHeight - padding;
-                const minX = 120; const minY = padding;
-                const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
-                const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
-                icon.style.left = randomX + 'px'; icon.style.top = randomY + 'px';
+                const maxX = window.innerWidth - 100, maxY = window.innerHeight - 150;
+                icon.style.left = Math.max(120, Math.floor(Math.random() * maxX)) + 'px';
+                icon.style.top = Math.max(20, Math.floor(Math.random() * maxY)) + 'px';
             });
         }
         window.addEventListener('load', randomizeIcons);
 
-        function killProcess(win) {
-            if (!win) return;
-            const shell = win.querySelector('.app-shell');
-            if (shell) shell.innerHTML = "";
-            win.setAttribute('visible', 'false');
+        function killAll() {
+            document.querySelectorAll('fos-window').forEach(win => {
+                const shell = win.querySelector('.app-shell');
+                if (shell) shell.innerHTML = "";
+                win.setAttribute('visible', 'false');
+            });
         }
 
+        // CONTROL UNIFICADO (MOUSE + TOUCH)
         let lastTap = 0;
-        document.addEventListener('mousedown', (e) => {
+        const mainHandler = (e) => {
             const path = e.composedPath();
             const trash = path.find(el => el && el.id === 'trash-bin');
             const now = Date.now();
-            
+
             if (trash) {
-                if (e.detail === 2 || (now - lastTap < 300)) {
-                    document.querySelectorAll('fos-window').forEach(win => killProcess(win));
-                }
-                lastTap = now; return;
+                if (now - lastTap < 300) { killAll(); }
+                lastTap = now;
+                e.preventDefault();
+                return;
             }
 
             const icon = e.target.closest('fos-icon') || e.target.closest('fos-menu-item');
@@ -208,7 +181,6 @@
                 const win = document.querySelector(`fos-window[name="${winName}"]`);
                 if (win) {
                     win.setAttribute('visible', 'true');
-                    if (typeof win.bringToFront === 'function') win.bringToFront();
                     const shell = win.querySelector('.app-shell');
                     const url = win.getAttribute('data-repo');
                     if (shell && url && shell.innerHTML.trim() === "") {
@@ -220,9 +192,12 @@
             const closeBtn = path.find(el => el.classList && el.classList.contains('fos-window-title-button') && el.dataset.action === "close");
             if (closeBtn) {
                 const win = closeBtn.getRootNode().host || path.find(el => el.tagName === 'FOS-WINDOW');
-                killProcess(win);
+                killAll(win);
             }
-        }, true);
+        };
+
+        document.addEventListener('touchstart', mainHandler, {passive: false});
+        document.addEventListener('mousedown', mainHandler);
 
         setInterval(() => {
             const clock = document.getElementById('clock');
