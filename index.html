@@ -2,67 +2,72 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Borsec Station</title>
     
     <link rel="stylesheet" href="https://victorribeiro.com/css/main.min.css">
     <script src="https://victorribeiro.com/js/fos.min.js"></script>
 
     <style>
-        * { box-sizing: border-box; }
-        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
-
-        body, html { 
-            background-color: #008080 !important; 
-            margin: 0; padding: 0; 
-            width: 100vw; height: 100vh; 
-            overflow: hidden !important;
-            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
-            font-family: sans-serif;
+        /* RESET RADICAL PARA EVITAR SCROLL */
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            touch-action: none; /* Desactiva gestos del navegador por defecto */
         }
 
-        #mainDesktop { position: absolute !important; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999; }
+        #tumblr_controls, .tmblr-iframe, .knight-rider-bar, #reg_banner { display: none !important; }
+
+        html, body { 
+            background-color: #008080 !important; 
+            margin: 0; padding: 0; 
+            width: 100vw; height: 100vh; height: 100dvh; 
+            overflow: hidden !important;
+            position: fixed; 
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NkYGD4D8SogAnMZGhgYGD4D8SogAnMZGhgAH0EAgB/6B9OAAAAAElFTkSuQmCC");
+            font-family: sans-serif;
+            left: 0; top: 0;
+        }
+
+        #mainDesktop { 
+            position: fixed !important; 
+            top: 0; left: 0; 
+            width: 100vw; height: 100vh; height: 100dvh; 
+            z-index: 9999;
+            overflow: hidden !important; /* Nada sale de aquí */
+        }
         
-        /* ICONOS DEL ESCRITORIO */
         fos-icon { 
-            width: 80px !important; height: 90px !important; 
+            width: 70px !important; height: 80px !important; 
             cursor: pointer; position: absolute !important;
             display: flex !important; flex-direction: column;
             align-items: center; justify-content: center;
         }
 
-        .icon-box {
-            width: 32px; height: 32px;
-            display: flex !important; align-items: center; justify-content: center;
-            margin-bottom: 4px; font-size: 24px;
-        }
-
         .icon-box img { width: 32px !important; height: 32px !important; image-rendering: pixelated; }
 
-        /* ICONOS DEL MENÚ START */
-        .menu-icon-small {
-            width: 16px; height: 16px; 
-            display: inline-flex;
-            align-items: center; justify-content: center;
-            margin-right: 8px; vertical-align: middle;
+        /* ADAPTACIÓN DE VENTANAS */
+        @media (max-width: 600px) {
+            fos-window {
+                width: 96vw !important;
+                height: 80dvh !important;
+                top: 2dvh !important;
+                left: 2vw !important;
+            }
+            .app-shell iframe { background: #000; }
         }
-        .menu-icon-small img { width: 16px !important; height: 16px !important; image-rendering: pixelated; }
-        .menu-icon-small.pixelated-emoji { font-size: 12px; }
 
-        /* VENTANAS Y SHELL */
-        .app-shell { width: 100%; height: 100%; background: #000; display: flex; }
+        .app-shell { width: 100%; height: 100%; background: #000; display: flex; overflow: hidden; }
         iframe { width: 100% !important; height: 100% !important; border: none; }
 
-        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; }
+        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; z-index: 10000; }
         #clock { color: #000; padding: 0 10px; line-height: 30px; font-size: 11px; border-left: 1px solid #808080; }
         
         .readme-content { 
             padding: 20px; background: #fff; color: #000; 
             font-family: "Courier New", Courier, monospace; 
-            height: 100%; overflow-y: auto; line-height: 1.4;
+            height: 100%; overflow-y: auto; touch-action: auto; /* Permite scroll solo aquí */
         }
-        .readme-content h1 { font-size: 18px; border-bottom: 2px solid #000; margin-bottom: 10px; }
-        .readme-content h2 { font-size: 15px; text-decoration: underline; margin-top: 15px; }
         .folder-content { padding: 10px; display: flex; gap: 10px; flex-wrap: wrap; }
     </style>
 </head>
@@ -73,49 +78,42 @@
             <fos-menu name="Start">
                 <div style="padding: 5px 10px; font-weight: bold;">Borsec Francisco</div>
                 <hr>
-                <fos-menu-item href="win_kimsort"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png"></span> KimSort</fos-menu-item>
-                <fos-menu-item href="win_ruttetra"><span class="menu-icon-small pixelated-emoji">📼</span> RutTetra Video</fos-menu-item>
-                <fos-menu-item href="win_screensaver"><span class="menu-icon-small pixelated-emoji">🖥️</span> Screensaver</fos-menu-item>
-                <fos-menu-item href="win_dit"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png"></span> DIT Engine</fos-menu-item>
-                <fos-menu-item href="win_pimpmypaint"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></span> PimpMyPaint</fos-menu-item>
-                <fos-menu-item href="win_webscape"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></span> Webscape</fos-menu-item>
-                <fos-menu-item href="win_3d_explorer"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></span> 3D Explorer</fos-menu-item>
-                <fos-menu-item href="win_images"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></span> Images</fos-menu-item>
-                <fos-menu-item href="win_help"><span class="menu-icon-small">📖</span> README.txt</fos-menu-item>
-                <fos-menu-item href="toys"><span class="menu-icon-small"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></span> Toys</fos-menu-item>
+                <fos-menu-item href="win_kimsort">KimSort</fos-menu-item>
+                <fos-menu-item href="win_ruttetra">RutTetra Video</fos-menu-item>
+                <fos-menu-item href="win_screensaver">Screensaver</fos-menu-item>
+                <fos-menu-item href="win_dit">DIT Engine</fos-menu-item>
+                <fos-menu-item href="win_pimpmypaint">PimpMyPaint</fos-menu-item>
+                <fos-menu-item href="win_webscape">Webscape</fos-menu-item>
+                <fos-menu-item href="win_3d_explorer">3D Explorer</fos-menu-item>
+                <fos-menu-item href="win_images">Images</fos-menu-item>
+                <fos-menu-item href="win_help">README.txt</fos-menu-item>
+                <fos-menu-item href="toys">Toys</fos-menu-item>
             </fos-menu>
             <div id="clock">00:00</div>
         </fos-bar>
 
-        <fos-icon id="trash-bin" name="Recycle Bin" style="top: 20px; left: 20px;">
+        <fos-icon id="trash-bin" name="Recycle Bin" style="top: 10px; left: 10px;">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/recycle_bin_full-4.png"></div>
         </fos-icon>
 
-        <fos-icon href="win_help" name="README.txt" style="top: 120px; left: 20px;">
+        <fos-icon href="win_help" name="README" style="top: 100px; left: 10px;">
             <div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"></div>
         </fos-icon>
 
         <fos-icon href="win_kimsort" name="KimSort" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png"></div></fos-icon>
-        <fos-icon href="win_ruttetra" name="RutTetra" class="draggable-icon"><div class="icon-box pixelated-emoji">📼</div></fos-icon>
-        <fos-icon href="win_screensaver" name="Screensaver" class="draggable-icon"><div class="icon-box pixelated-emoji">🖥️</div></fos-icon>
+        <fos-icon href="win_ruttetra" name="RutTetra" class="draggable-icon"><div class="icon-box">📼</div></fos-icon>
+        <fos-icon href="win_screensaver" name="3D Maze" class="draggable-icon"><div class="icon-box">🖥️</div></fos-icon>
         <fos-icon href="win_dit" name="DIT" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png"></div></fos-icon>
-        <fos-icon href="win_pimpmypaint" name="pimpmypaint" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></div></fos-icon>
-        <fos-icon href="win_webscape" name="webscape" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></div></fos-icon>
+        <fos-icon href="win_pimpmypaint" name="Paint" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></div></fos-icon>
+        <fos-icon href="win_webscape" name="Webscape" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></div></fos-icon>
         <fos-icon href="win_3d_explorer" name="3D Explorer" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></div></fos-icon>
         <fos-icon href="win_images" name="Images" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div></fos-icon>
         <fos-icon href="toys" name="Toys" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div></fos-icon>
 
-        <fos-window name="win_help" title="README.txt - Notepad" width="500" height="420" visible="true">
+        <fos-window name="win_help" title="README.txt" width="400" height="300" visible="true">
             <div class="readme-content">
-                <h1>🖥️ Borsec Station v1.0</h1>
-                <p>Bienvenido a la interfaz de visualización y edición creativa de Borsec Francisco.</p>
-                <h2>🚀 Gestión de Procesos</h2>
-                <p><strong>Papelera de reciclaje:</strong> doble clic cierra todo y libera la memoria del sistema.</p>
-                <h2>📂 Compatibilidad</h2>
-                <p>Compatibilidad perfecta con archivos <strong>JPG, PNG y MP4</strong>.</p>
-                <hr>
-                <p>Gracias por usar este entorno. Espero que disfruten la experiencia.</p>
-                <p style="text-align: right;"><em>- Borsec Francisco</em></p>
+                <h1>🖥️ Borsec Station</h1>
+                <p>Ajuste de Canvas bloqueado al 100%.</p>
             </div>
         </fos-window>
 
@@ -125,59 +123,57 @@
         <fos-window name="win_dit" title="DIT Project" width="850" height="650" visible="false" data-repo="https://borfwashere.github.io/dit/dit.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_pimpmypaint" title="pimpmypaint" width="960" height="680" visible="false" data-repo="https://borfwashere.github.io/pimpmypaint/"><div class="app-shell"></div></fos-window>
         <fos-window name="win_webscape" title="webscape" width="900" height="650" visible="false" data-repo="https://borfwashere.github.io/web/webscape.html"><div class="app-shell"></div></fos-window>
-        <fos-window name="win_3d_explorer" title="Reality-Editor v1.0" width="1050" height="750" visible="false" data-repo="https://borfwashere.github.io/3dmodel/3dexplorer.html"><div class="app-shell"></div></fos-window>
+        <fos-window name="win_3d_explorer" title="Reality-Editor" width="1050" height="750" visible="false" data-repo="https://borfwashere.github.io/3dmodel/3dexplorer.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_images" title="Images" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/Images/images.html"><div class="app-shell"></div></fos-window>
-        <fos-window name="toys" title="C:\Borf\Toys" width="500" height="350" visible="false">
+        
+        <fos-window name="toys" title="Toys" width="500" height="350" visible="false">
             <div class="folder-content">
-                <fos-icon href="win_matrix" name="Matrix.exe" style="position:relative !important;"><div class="icon-box pixelated-emoji">🌐</div></fos-icon>
-                <fos-icon href="win_gifsweeper" name="GifSweeper.exe" style="position:relative !important;"><div class="icon-box pixelated-emoji">🙂</div></fos-icon>
+                <fos-icon href="win_matrix" name="Matrix.exe" style="position:relative !important;"><div class="icon-box">🌐</div></fos-icon>
+                <fos-icon href="win_gifsweeper" name="GifSweeper.exe" style="position:relative !important;"><div class="icon-box">🙂</div></fos-icon>
             </div>
         </fos-window>
-        <fos-window name="win_matrix" title="Matrix.exe" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/matrix.html"><div class="app-shell"></div></fos-window>
-        <fos-window name="win_gifsweeper" title="GifSweeper.exe" width="500" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/gifsweeper.html"><div class="app-shell"></div></fos-window>
+
+        <fos-window name="win_matrix" title="Matrix" width="900" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/matrix.html"><div class="app-shell"></div></fos-window>
+        <fos-window name="win_gifsweeper" title="GifSweeper" width="500" height="600" visible="false" data-repo="https://borfwashere.github.io/matrix/gifsweeper.html"><div class="app-shell"></div></fos-window>
 
     </fos-desktop>
 
     <script>
+        // BLOQUEO DE EVENTOS DE SCROLL
+        document.addEventListener('touchmove', function(e) {
+            if (!e.target.closest('.readme-content')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
         function randomizeIcons() {
-            const icons = document.querySelectorAll('#mainDesktop > fos-icon.draggable-icon');
-            const iconWidth = 80;
-            const iconHeight = 90;
-            const barHeight = 40; // Espacio reservado para la barra inferior
-            const padding = 20;
-
+            const icons = document.querySelectorAll('.draggable-icon');
+            const barHeight = 40;
+            // Calculamos límites estrictos para que nada salga de la pantalla
             icons.forEach(icon => {
-                // El límite X debe considerar el ancho del icono para que no se desborde a la derecha
-                const maxX = window.innerWidth - iconWidth - padding;
-                // El límite Y debe considerar el alto del icono y la barra de tareas
-                const maxY = window.innerHeight - iconHeight - barHeight - padding;
+                const iconWidth = 80;
+                const iconHeight = 90;
+                const maxX = window.innerWidth - iconWidth - 10;
+                const maxY = window.innerHeight - iconHeight - barHeight - 10;
                 
-                // Evitamos que los iconos aleatorios tapen la columna izquierda fija (aprox 120px)
-                const minX = 120;
-                const minY = padding;
-
-                const randomX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
-                const randomY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
-
-                icon.style.left = randomX + 'px';
-                icon.style.top = randomY + 'px';
+                // Aseguramos que no se encimen en los iconos fijos de la izquierda
+                icon.style.left = Math.max(100, Math.floor(Math.random() * maxX)) + 'px';
+                icon.style.top = Math.max(20, Math.floor(Math.random() * maxY)) + 'px';
             });
         }
         window.addEventListener('load', randomizeIcons);
-
-        function killProcess(win) {
-            if (!win) return;
-            const shell = win.querySelector('.app-shell');
-            if (shell) shell.innerHTML = "";
-            win.setAttribute('visible', 'false');
-        }
+        window.addEventListener('resize', randomizeIcons);
 
         document.addEventListener('mousedown', (e) => {
             const path = e.composedPath();
             const trash = path.find(el => el.id === 'trash-bin');
             
             if (trash && e.detail === 2) {
-                document.querySelectorAll('fos-window').forEach(win => killProcess(win));
+                document.querySelectorAll('fos-window').forEach(win => {
+                    const shell = win.querySelector('.app-shell');
+                    if (shell) shell.innerHTML = "";
+                    win.setAttribute('visible', 'false');
+                });
                 return;
             }
 
@@ -187,19 +183,12 @@
                 const win = document.querySelector(`fos-window[name="${winName}"]`);
                 if (win) {
                     win.setAttribute('visible', 'true');
-                    if (typeof win.bringToFront === 'function') win.bringToFront();
                     const shell = win.querySelector('.app-shell');
                     const url = win.getAttribute('data-repo');
                     if (shell && url && shell.innerHTML.trim() === "") {
                         shell.innerHTML = `<iframe src="${url}"></iframe>`;
                     }
                 }
-            }
-
-            const closeBtn = path.find(el => el.classList && el.classList.contains('fos-window-title-button') && el.dataset.action === "close");
-            if (closeBtn) {
-                const win = closeBtn.getRootNode().host || path.find(el => el.tagName === 'FOS-WINDOW');
-                killProcess(win);
             }
         }, true);
 
