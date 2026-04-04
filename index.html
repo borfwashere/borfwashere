@@ -43,18 +43,45 @@
             align-items: center; justify-content: center;
         }
 
-        /* BLOQUEO FÍSICO INAMOVIBLE */
         #trash-bin { top: 20px !important; left: 20px !important; }
         #readme-icon { top: 120px !important; left: 20px !important; }
 
         .icon-box { width: 32px; height: 32px; display: flex !important; align-items: center; justify-content: center; margin-bottom: 4px; font-size: 24px; }
         .icon-box img { width: 32px !important; height: 32px !important; image-rendering: pixelated; pointer-events: none; }
 
+        /* Estilo para iconos dentro del menú */
+        fos-menu-item { display: flex !important; align-items: center; gap: 10px; padding: 5px 10px !important; }
+        fos-menu-item .icon-box { width: 20px; height: 20px; font-size: 16px; margin: 0; }
+        fos-menu-item .icon-box img { width: 16px !important; height: 16px !important; }
+
         .app-shell { width: 100%; height: 100%; background: #000; display: flex; }
         iframe { width: 100% !important; height: 100% !important; border: none; }
 
-        fos-bar { background: #c0c0c0 !important; border-top: 1px solid #fff !important; z-index: 10000; position: absolute; bottom: 0; width: 100%; height: 40px; }
-        #clock { color: #000; padding: 0 10px; line-height: 40px; font-size: 11px; border-left: 1px solid #808080; }
+        fos-bar { 
+            background: #c0c0c0 !important; 
+            border-top: 1px solid #fff !important; 
+            z-index: 10000; 
+            position: absolute; 
+            bottom: 0; 
+            width: 100%; 
+            height: 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        #clock { 
+            color: #000; 
+            padding: 0 10px; 
+            height: 100%;
+            display: flex;
+            align-items: center;
+            font-size: 11px; 
+            border-left: 1px solid #808080; 
+            background: #c0c0c0;
+            min-width: 60px;
+            justify-content: center;
+        }
         
         .readme-content { padding: 20px; background: #fff; color: #000; font-family: "Courier New", Courier, monospace; height: 100%; overflow-y: auto; }
         
@@ -68,19 +95,19 @@
 
     <fos-desktop id="mainDesktop">
         <fos-bar>
-            <fos-menu name="Start">
+            <fos-menu name="Start" id="startMenu">
                 <div style="padding: 5px 10px; font-weight: bold; background: #000080; color: white;">Borsec Francisco</div>
                 <hr>
-                <fos-menu-item href="win_kimsort">KimSort</fos-menu-item>
-                <fos-menu-item href="win_ruttetra">RutTetra Video</fos-menu-item>
-                <fos-menu-item href="win_screensaver">Screensaver</fos-menu-item>
-                <fos-menu-item href="win_dit">DIT Engine</fos-menu-item>
-                <fos-menu-item href="win_pimpmypaint">PimpMyPaint</fos-menu-item>
-                <fos-menu-item href="win_webscape">Webscape</fos-menu-item>
-                <fos-menu-item href="win_3d_explorer">3D Explorer</fos-menu-item>
-                <fos-menu-item href="win_images">Images</fos-menu-item>
-                <fos-menu-item href="win_help">README.txt</fos-menu-item>
-                <fos-menu-item href="toys">Toys</fos-menu-item>
+                <fos-menu-item href="win_kimsort"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/display_properties-2.png"></div> KimSort</fos-menu-item>
+                <fos-menu-item href="win_ruttetra"><div class="icon-box">📼</div> RutTetra Video</fos-menu-item>
+                <fos-menu-item href="win_screensaver"><div class="icon-box">🖥️</div> Screensaver</fos-menu-item>
+                <fos-menu-item href="win_dit"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/search_file-2.png"></div> DIT Engine</fos-menu-item>
+                <fos-menu-item href="win_pimpmypaint"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/paint_old-0.png"></div> PimpMyPaint</fos-menu-item>
+                <fos-menu-item href="win_webscape"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></div> Webscape</fos-menu-item>
+                <fos-menu-item href="win_3d_explorer"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></div> 3D Explorer</fos-menu-item>
+                <fos-menu-item href="win_images"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div> Images</fos-menu-item>
+                <fos-menu-item href="win_help"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"></div> README.txt</fos-menu-item>
+                <fos-menu-item href="toys"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/game_solitaire-0.png"></div> Toys</fos-menu-item>
             </fos-menu>
             <div id="clock">00:00</div>
         </fos-bar>
@@ -137,10 +164,19 @@
     </fos-desktop>
 
     <script>
-        // SEGURIDAD DE CÓDIGO
         document.addEventListener('keydown', e => {
             if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) {
                 e.preventDefault(); return false;
+            }
+        });
+
+        // Lógica para toggle del menú Start
+        const startMenu = document.getElementById('startMenu');
+        startMenu.addEventListener('click', (e) => {
+            // El componente FOS suele manejar la visibilidad internamente, 
+            // pero si quieres forzar el cierre al clicar de nuevo:
+            if(startMenu.hasAttribute('active')) {
+                // startMenu.removeAttribute('active'); // Dependiendo de la versión de FOS
             }
         });
 
@@ -170,14 +206,12 @@
             const now = Date.now();
             const isDouble = (e.detail === 2 || (now - lastTap < 300));
 
-            // Lógica para Papelera
             if (trash) {
                 if (isDouble) { killAll(); }
                 lastTap = now;
                 return;
             }
 
-            // Lógica para el README fijo
             if (readme && isDouble) {
                 const win = document.querySelector('fos-window[name="win_help"]');
                 if (win) win.setAttribute('visible', 'true');
@@ -185,7 +219,6 @@
                 return;
             }
 
-            // Lógica para iconos draggables y menú
             const icon = e.target.closest('fos-icon') || e.target.closest('fos-menu-item');
             if (icon && icon.id !== 'trash-bin' && icon.id !== 'readme-icon') {
                 const winName = icon.getAttribute('href');
