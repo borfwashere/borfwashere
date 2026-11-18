@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Rutt-Etra Studio v1.7 - Borsec Francisco</title>
+    <style>
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            margin: 0; background: #018281; 
+            font-family: 'MS Sans Serif', Arial, sans-serif; 
+            overflow: hidden; display: flex; align-items: center; justify-content: center; 
+            height: 100vh; width: 100vw; position: fixed;
+            user-select: none; -webkit-user-select: none;
+        }
+
+        .window { 
+            width: 96vw; max-width: 800px; height: 92vh; 
+            background: #c0c0c0; border: 2px solid #fff; 
+            box-shadow: 2px 2px 0px #000; display: flex; flex-direction: column; padding: 2px;
+        }
+
+        .title-bar { 
+            background: linear-gradient(90deg, #000080, #1084d0); 
+            padding: 4px 6px; display: flex; justify-content: space-between; 
+            color: white; font-weight: bold; font-size: 12px; flex-shrink: 0;
+        }
+
+        #viewport { 
+            flex-grow: 1; background: #000; margin: 4px; 
+            border: 3px inset #fff; position: relative; overflow: hidden;
+            cursor: crosshair; touch-action: none;
+        }
+        
+        .gui-panel { 
+            background: #c0c0c0; padding: 6px; border-top: 2px solid #fff; 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
+            gap: 6px; flex-shrink: 0; max-height: 40vh; overflow-y: auto;
+            touch-action: pan-y; -webkit-overflow-scrolling: touch;
+        }
+
+        .control-group { 
+            border: 2px groove #fff; padding: 10px 5px; position: relative; 
+            display: flex; flex-direction: column; gap: 6px; align-items: center; 
+        }
+
+        .group-label { 
+            position: absolute; top: -7px; left: 8px; 
+            background: #c0c0c0; padding: 0 3px; font-weight: bold; font-size: 9px; 
+        }
+
+        .win-btn {
+            width: 100%; max-width: 120px; height: 32px;
+            background: #eee; border: 3px solid;
+            border-color: #fff #666 #666 #fff;
+            cursor: pointer; font-size: 10px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            -webkit-appearance: none;
+        }
+
+        .win-btn:active, .active-mode { border-color: #666 #fff #fff #666; background: #d4d4d4; }
+
+        .fader-row { display: flex; gap: 10px; justify-content: space-around; width: 100%; height: 85px; }
+        .fader-container { display: flex; flex-direction: column; align-items: center; position: relative; width: 40px; }
+        .fader-track { width: 4px; height: 50px; background: #888; border: 1px inset #fff; position: absolute; top: 12px; }
+        
+        input[type=range].vertical-fader {
+            -webkit-appearance: none; appearance: none;
+            width: 50px; height: 30px; background: transparent;
+            transform: rotate(-90deg); position: absolute; top: 25px;
+            cursor: pointer; z-index: 10; touch-action: none;
+        }
+        
+        input[type=range].vertical-fader::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 16px; height: 24px; background: #222; border: 2px solid #777;
+        }
+
+        .val-display { font-family: monospace; font-size: 9px; margin-top: 68px; }
+        #status { font-size: 9px; font-weight: bold; text-transform: uppercase; margin-top: 2px; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="window">
+    <div class="title-bar"><span>RuttEtra_Studio_v1.7.exe</span></div>
+    <div id="viewport"></div>
+    <div class="gui-panel">
+        <div class="control-group">
+            <span class="group-label">Source</span>
+            <button class="win-btn" onclick="document.getElementById('file-input').click()">LOAD MEDIA</button>
+            <div id="status">READY</div>
+            <input type="file" id="file-input" style="display:none" accept="image/*,video/*">
+            <div style="display:flex; gap:4px; width:100%;">
+                <button id="btnColor" class="win-btn active-mode">RGB</button>
+                <button id="btnBW" class="win-btn">B&N</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <span class="group-label">Geometry</span>
+            <div class="fader-row">
+                <div class="fader-container">
+                    <label style="font-size:7px">SPACE</label>
+                    <div class="fader-track"></div>
+                    <input type="range" id="spacing" class="vertical-fader" min="3" max="20" value="6">
+                    <span class="val-display" id="v-spacing">6</span>
+                </div>
+                <div class="fader-container">
+                    <label style="font-size:7px">SCALE</label>
+                    <div class="fader-track"></div>
+                    <input type="range" id="scale" class="vertical-fader" min="0.5" max="5" step="0.1" value="2.5">
+                    <span class="val-display" id="v-scale">2.5</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <span class="group-label">Visuals</span>
+            <div class="fader-row">
+                <div class="fader-container">
+                    <label style="font-size:7px">BRIGHT</label>
+                    <div class="fader-track"></div>
+                    <input type="range" id="bright" class="vertical-fader" min="0" max="2" step="0.1" value="1">
+                    <span class="val-display" id="v-bright">1.0</span>
+                </div>
+                <div class="fader-container">
+                    <label style="font-size:7px">DEPTH</label>
+                    <div class="fader-track"></div>
+                    <input type="range" id="depth" class="vertical-fader" min="-300" max="300" value="77">
+                    <span class="val-display" id="v-depth">77</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <span class="group-label">System</span>
+            <button id="btnSnap" class="win-btn">SNAP</button>
+            <button id="btnReset" class="win-btn">RESET</button>
+        </div>
+    </div>
+</div>
+
+<video id="hidden-video" loop muted playsinline autoplay style="display:none; webkit-playsinline: true;"></video>
+<canvas id="hidden-canvas" style="display:none;"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+    (function(){
+        window.addEventListener('keydown', function(e) {
+            if (e.keyCode == 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74)) || 
+                (e.ctrlKey && e.keyCode == 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    })();
+
+    {
+        let scene, camera, renderer, linesGroup;
+        const DEFAULT_PARAMS = { spacing: 6, scale: 2.5, bright: 1, depth: 77, mode: 'color' };
+        let params = { ...DEFAULT_PARAMS };
+        let targetRot = { x: 0, y: 0 }, currRot = { x: 0, y: 0 }, isDown = false, m = { x: 0, y: 0 };
+        let initialPinchDist = 0;
+        
+        const videoEl = document.getElementById('hidden-video');
+        const procCanvas = document.getElementById('hidden-canvas');
+        const procCtx = procCanvas.getContext('2d', { alpha: false, willReadFrequently: true });
+        const statusEl = document.getElementById('status');
+        let sourceType = null, isProcessing = false;
+        const PROC_RES = 160;
+
+        const init = () => {
+            const container = document.getElementById('viewport');
+            scene = new THREE.Scene();
+            linesGroup = new THREE.Group();
+            scene.add(linesGroup);
+            
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 1, 10000);
+            camera.position.z = 800;
+
+            renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            document.querySelectorAll('input[type=range]').forEach(i => {
+                i.oninput = (e) => {
+                    params[e.target.id] = parseFloat(e.target.value);
+                    document.getElementById('v-'+e.target.id).innerText = e.target.value;
+                    if(sourceType === 'image') updateGeometry();
+                };
+            });
+
+            const start = (x, y) => { isDown = true; m.x = x; m.y = y; };
+            const move = (x, y) => {
+                if (!isDown) return;
+                targetRot.y += (x - m.x) * 0.01;
+                targetRot.x += (y - m.y) * 0.01;
+                m.x = x; m.y = y;
+            };
+
+            const getDist = (t) => Math.hypot(t[0].pageX - t[1].pageX, t[0].pageY - t[1].pageY);
+
+            container.addEventListener('mousedown', e => start(e.clientX, e.clientY));
+            window.addEventListener('mousemove', e => move(e.clientX, e.clientY));
+            window.addEventListener('mouseup', () => isDown = false);
+            
+            container.addEventListener('touchstart', e => {
+                e.preventDefault();
+                if (e.touches.length === 2) initialPinchDist = getDist(e.touches);
+                else start(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: false });
+
+            container.addEventListener('touchmove', e => {
+                e.preventDefault();
+                if (e.touches.length === 2) {
+                    let dist = getDist(e.touches);
+                    camera.position.z -= (dist - initialPinchDist) * 2;
+                    camera.position.z = Math.max(100, Math.min(camera.position.z, 5000));
+                    initialPinchDist = dist;
+                } else move(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: false });
+
+            container.addEventListener('wheel', e => {
+                camera.position.z += e.deltaY * 0.5;
+                camera.position.z = Math.max(100, Math.min(camera.position.z, 5000));
+                e.preventDefault();
+            }, { passive: false });
+
+            document.getElementById('btnSnap').onclick = () => {
+                const link = document.createElement('a');
+                link.download = 'snap_' + Date.now() + '.png';
+                link.href = renderer.domElement.toDataURL('image/png');
+                link.click();
+            };
+
+            document.getElementById('btnReset').onclick = () => {
+                params = { ...DEFAULT_PARAMS };
+                document.querySelectorAll('input[type=range]').forEach(el => {
+                    el.value = params[el.id];
+                    document.getElementById('v-'+el.id).innerText = params[el.id];
+                });
+                camera.position.z = 800;
+                targetRot = { x: 0, y: 0 }; currRot = { x: 0, y: 0 };
+                document.getElementById('btnColor').classList.add('active-mode');
+                document.getElementById('btnBW').classList.remove('active-mode');
+                if(sourceType === 'image') updateGeometry();
+            };
+
+            document.getElementById('file-input').onchange = handleMediaLoad;
+            document.getElementById('btnColor').onclick = () => { params.mode = 'color'; setModeUI('btnColor'); if(sourceType==='image') updateGeometry(); };
+            document.getElementById('btnBW').onclick = () => { params.mode = 'bw'; setModeUI('btnBW'); if(sourceType==='image') updateGeometry(); };
+
+            autoLoadWelcome();
+            animate();
+        };
+
+        const setModeUI = (id) => {
+            document.getElementById('btnColor').classList.toggle('active-mode', id==='btnColor');
+            document.getElementById('btnBW').classList.toggle('active-mode', id==='btnBW');
+        };
+
+        const handleMediaLoad = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            if (file.type.startsWith('video')) {
+                sourceType = 'video'; videoEl.src = url; videoEl.play();
+                videoEl.onloadedmetadata = () => setupCanvas(videoEl.videoWidth, videoEl.videoHeight);
+            } else {
+                sourceType = 'image';
+                const img = new Image();
+                img.onload = () => { 
+                    setupCanvas(img.width, img.height); 
+                    procCtx.drawImage(img, 0, 0, procCanvas.width, procCanvas.height); 
+                    updateGeometry(); 
+                    statusEl.innerText = "IMAGE"; 
+                };
+                img.src = url;
+            }
+        };
+
+        const setupCanvas = (w, h) => {
+            procCanvas.width = PROC_RES;
+            procCanvas.height = (PROC_RES / w) * h;
+        };
+
+        const updateGeometry = () => {
+            if (isProcessing) return;
+            isProcessing = true;
+            const imgW = procCanvas.width, imgH = procCanvas.height;
+            const data = procCtx.getImageData(0, 0, imgW, imgH).data;
+            while(linesGroup.children.length > 0) {
+                const l = linesGroup.children[0]; l.geometry.dispose(); linesGroup.remove(l);
+            }
+            const mat = new THREE.LineBasicMaterial({ vertexColors: true });
+            for (let y = 0; y < imgH; y += params.spacing) {
+                const pts = [], cols = [];
+                for (let x = 0; x < imgW; x += 2) {
+                    const i = (Math.floor(y) * imgW + x) * 4;
+                    const r = data[i]/255, g = data[i+1]/255, b = data[i+2]/255, avg = (r+g+b)/3;
+                    pts.push(new THREE.Vector3((x - imgW/2) * params.scale, (imgH/2 - y) * params.scale, avg * params.depth));
+                    const c = new THREE.Color();
+                    params.mode === 'color' ? c.setRGB(r*params.bright, g*params.bright, b*params.bright) : c.setScalar(avg*params.bright);
+                    cols.push(c.r, c.g, c.b);
+                }
+                if (pts.length > 1) {
+                    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+                    geo.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+                    linesGroup.add(new THREE.Line(geo, mat));
+                }
+            }
+            isProcessing = false;
+        };
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            if (sourceType === 'video' && videoEl.readyState >= 2) {
+                procCtx.drawImage(videoEl, 0, 0, procCanvas.width, procCanvas.height);
+                updateGeometry();
+            }
+            currRot.x += (targetRot.x - currRot.x) * 0.1;
+            currRot.y += (targetRot.y - currRot.y) * 0.1;
+            linesGroup.rotation.set(currRot.x, currRot.y, 0);
+            renderer.render(scene, camera);
+        };
+
+        const autoLoadWelcome = () => {
+            videoEl.crossOrigin = "anonymous";
+            videoEl.src = "welcome_video.mp4"; 
+            videoEl.play().then(() => { sourceType = 'video'; statusEl.innerText = "LIVE"; }).catch(() => { statusEl.innerText = "READY"; });
+            videoEl.onloadedmetadata = () => setupCanvas(videoEl.videoWidth, videoEl.videoHeight);
+        };
+
+        window.onresize = () => {
+            const c = document.getElementById('viewport');
+            camera.aspect = c.clientWidth / c.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(c.clientWidth, c.clientHeight);
+        };
+
+        init();
+    }
+</script>
+</body>
+</html>

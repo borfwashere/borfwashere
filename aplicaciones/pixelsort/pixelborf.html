@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>KIMSORT - v5.9</title>
+    <style>
+        :root {
+            --win-gray: #c0c0c0; --win-white: #ffffff; --win-dark-gray: #808080;
+            --win-black: #000000; --win-blue: #000080; --win-blue-light: #1084d0;
+            --glitch-cian: #00ffff;
+        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        html, body { position: fixed; width: 100%; height: 100%; overflow: hidden; touch-action: none; }
+        body { background-color: #008080; margin: 0; display: flex; align-items: center; justify-content: center; font-family: "Tahoma", sans-serif; user-select: none; padding: 10px; }
+        .window { width: 100%; max-width: 980px; background: var(--win-gray); border: 2px solid; border-color: var(--win-white) var(--win-black) var(--win-black) var(--win-white); padding: 2px; box-shadow: 3px 3px 0 var(--win-black); display: flex; flex-direction: column; max-height: 98vh; }
+        .title-bar { background: linear-gradient(90deg, var(--win-blue), var(--win-blue-light)); padding: 3px 8px; color: white; font-weight: bold; font-size: 12px; flex-shrink: 0; }
+        .main-layout { display: flex; padding: 10px; gap: 10px; overflow: hidden; }
+        .tabs-header { display: none; }
+        @media (max-width: 850px) {
+            body { padding: 0; height: 100dvh; align-items: stretch; }
+            .window { max-height: 100dvh; height: 100%; border: none; }
+            .main-layout { flex-direction: column; padding: 5px; gap: 0; overflow: hidden; }
+            .viewport { height: 40dvh !important; order: 1; flex-shrink: 0; margin-bottom: 5px; }
+            .controls { width: 100% !important; order: 2; height: 230px !important; display: flex; flex-direction: column; }
+            .tabs-header { display: flex; margin-bottom: -2px; z-index: 10; }
+            .tab-btn { padding: 6px 12px; font-size: 11px; font-weight: bold; background: var(--win-gray); border: 2px solid; border-color: var(--win-white) var(--win-black) var(--win-gray) var(--win-white); }
+            .tab-btn.active { border-bottom: none; padding-bottom: 8px; margin-top: -2px; }
+            .tab-pane { display: none; border: 2px solid; border-color: var(--win-white) var(--win-black) var(--win-black) var(--win-white); padding: 10px; background: var(--win-gray); flex-grow: 1; }
+            .tab-pane.active { display: block; }
+            fieldset { border: none !important; padding: 0 !important; }
+            legend { display: none; }
+        }
+        .controls { width: 330px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        fieldset { border: 2px solid; border-color: var(--win-dark-gray) var(--win-white) var(--win-white) var(--win-dark-gray); padding: 10px; font-size: 11px; }
+        legend { background: var(--win-gray); padding: 0 5px; font-weight: bold; color: var(--win-blue); }
+        .dir-grid { display: grid; grid-template-columns: repeat(3, 40px); gap: 6px; justify-content: center; margin: 5px 0; }
+        .dir-pixel { width: 40px; height: 40px; background: var(--win-dark-gray); border: 2px solid var(--win-black); color: #fff; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .dir-pixel.active { background: var(--win-black); border-color: var(--glitch-cian); color: var(--glitch-cian); box-shadow: 0 0 5px var(--glitch-cian); }
+        .center-pixel { width: 40px; height: 40px; background: var(--win-black); border: 2px solid #fff; color: #fff; font-size: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 20px; background: #000; border: 2px inset #fff; background-image: linear-gradient(90deg, #f00 0%, #0f0 20%, #00f 40%, #ff0 60%, #f0f 80%, #0ff 100%); background-size: var(--tp, 50%) 100%; }
+        .viewport { flex-grow: 1; background: #000; border: 4px inset #fff; height: 500px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        canvas { image-rendering: pixelated; max-width: 100%; max-height: 100%; }
+        .win-btn { padding: 8px; font-size: 10px; font-weight: bold; background: var(--win-gray); border: 2px solid; border-color: #fff #000 #000 #fff; cursor: pointer; width: 100%; }
+        .win-btn:active { border-color: #000 #fff #fff #000; padding: 9px 7px 7px 9px; }
+        .btn-chaos { color: #fff; background-image: linear-gradient(45deg, #f00 25%, #0f0 25%, #0f0 50%, #00f 50%, #00f 75%, #ff0 75%, #ff0 100%); background-size: 6px 6px; }
+        .status-bar { border: 1px solid var(--win-dark-gray); padding: 3px 5px; font-size: 10px; background: var(--win-gray); display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="window">
+    <div class="title-bar">kimsort.exe</div>
+    <div class="main-layout">
+        <div class="viewport"><canvas id="c"></canvas><video id="v" loop muted playsinline crossorigin="anonymous" style="display:none"></video></div>
+        <div class="controls">
+            <div class="tabs-header">
+                <div class="tab-btn active" onclick="ST(event, 'p1')">FILE</div>
+                <div class="tab-btn" onclick="ST(event, 'p2')">ALGO</div>
+                <div class="tab-btn" onclick="ST(event, 'p3')">VECT</div>
+            </div>
+            <div id="p1" class="tab-pane active">
+                <fieldset><legend>Data</legend>
+                    <input type="file" id="fi" accept="image/*, video/mp4" style="display:none">
+                    <button class="win-btn" onclick="document.getElementById('fi').click()">IMPORT</button>
+                    <button class="win-btn" id="res" style="margin-top:5px">RESTORE</button>
+                </fieldset>
+            </div>
+            <div id="p2" class="tab-pane">
+                <fieldset><legend>Algo</legend>
+                    <select id="ef" style="width:100%; margin-bottom:5px;"><option value="brightness">Brightness</option><option value="saturation">Saturation</option><option value="red">Red</option></select>
+                    <input type="range" id="tr" min="0" max="255" value="120">
+                    <button class="win-btn btn-chaos" id="ch" style="margin-top:8px">CHAOS</button>
+                </fieldset>
+            </div>
+            <div id="p3" class="tab-pane">
+                <div class="dir-grid">
+                    <div></div><button class="dir-pixel" id="b-up">↑</button><div></div>
+                    <button class="dir-pixel" id="b-left">←</button><div class="center-pixel">KIM</div><button class="dir-pixel" id="b-right">→</button>
+                    <div></div><button class="dir-pixel" id="b-down">↓</button><div></div>
+                </div>
+            </div>
+            <button class="win-btn" id="pb" style="background:var(--win-blue); color:white; margin-top:auto">EXECUTE / PLAY</button>
+        </div>
+    </div>
+    <div class="status-bar"><span>System Protected.</span><span>v5.9</span></div>
+</div>
+
+<script>
+(function() {
+    // --- SHIELD SYSTEM ---
+    const trap = function() { setInterval(function() { debugger; }, 100); };
+    document.addEventListener('keydown', e => {
+        if (e.key === "F12" || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'u')) {
+            e.preventDefault(); return false;
+        }
+    });
+
+    // --- ENGINE ---
+    const canvas = document.getElementById('c'), ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const video = document.getElementById('v'), pBtn = document.getElementById('pb');
+    let img = new Image(), dirs = { up: false, down: false, left: false, right: false }, isV = false, isP = false;
+
+    window.ST = (e, id) => {
+        if (window.innerWidth > 850) return;
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
+    };
+
+    const upUI = () => { document.getElementById('tr').style.setProperty('--tp', `${(document.getElementById('tr').value/255)*100}%`); };
+    
+    document.getElementById('fi').onchange = (e) => {
+        const file = e.target.files[0]; if(!file) return;
+        const url = URL.createObjectURL(file);
+        if(file.type.includes('video')) { isV = true; video.src = url; video.onloadedmetadata = () => { const s = Math.min(1, 640 / Math.max(video.videoWidth, video.videoHeight)); canvas.width = Math.round(video.videoWidth * s); canvas.height = Math.round(video.videoHeight * s); video.currentTime = 0.1; }; video.onseeked = () => ctx.drawImage(video, 0, 0, canvas.width, canvas.height); }
+        else { isV = false; img.onload = () => { canvas.width = img.width; canvas.height = img.height; ctx.drawImage(img, 0, 0); }; img.src = url; }
+    };
+
+    const run = (axis, th, type, d, ran) => {
+        const data = ctx.getImageData(0,0,canvas.width,canvas.height), p = data.data, w = canvas.width, h = canvas.height;
+        const vert = axis === 'vertical', out = vert ? w : h, inn = vert ? h : w;
+        for (let i = 0; i < out; i++) {
+            let px = [];
+            for (let j = 0; j < inn; j++) {
+                const idx = vert ? (j * w + i) * 4 : (i * w + j) * 4;
+                const r = p[idx], g = p[idx+1], b = p[idx+2];
+                let v = type === 'brightness' ? (r+g+b)/3 : (type === 'red' ? r : Math.max(r,g,b)-Math.min(r,g,b));
+                px.push({ r, g, b, a: p[idx+3], v });
+            }
+            let s = 0;
+            while(s < inn) {
+                while(s < inn && px[s].v < th) s++;
+                let e = s; while(e < inn && px[e].v >= th) e++;
+                if(e > s) {
+                    const seg = px.slice(s, e);
+                    ran ? seg.sort(() => Math.random() - 0.5) : seg.sort((a, b) => d > 0 ? a.v - b.v : b.v - a.v);
+                    for(let k=0; k<seg.length; k++) px[s+k] = seg[k];
+                }
+                s = e;
+            }
+            for (let j = 0; j < inn; j++) {
+                const idx = vert ? (j * w + i) * 4 : (i * w + j) * 4;
+                p[idx] = px[j].r; p[idx+1] = px[j].g; p[idx+2] = px[j].b; p[idx+3] = px[j].a;
+            }
+        }
+        ctx.putImageData(data, 0, 0);
+    };
+
+    const proc = () => {
+        const t = document.getElementById('ef').value, th = parseInt(document.getElementById('tr').value);
+        const nd = !dirs.up && !dirs.down && !dirs.left && !dirs.right;
+        if(dirs.left || dirs.right || nd) run('horizontal', th, t, dirs.left ? -1 : 1, nd);
+        if(dirs.up || dirs.down) run('vertical', th, t, dirs.up ? -1 : 1, false);
+    };
+
+    let lastFrame = 0;
+    const loop = (ts = 0) => {
+        if(isV && isP) {
+            if (ts - lastFrame >= 66) { lastFrame = ts; ctx.drawImage(video, 0, 0, canvas.width, canvas.height); proc(); }
+            requestAnimationFrame(loop);
+        }
+    };
+
+    pBtn.onclick = () => {
+        if(isV) { isP = !isP; isP ? (video.play(), loop()) : video.pause(); pBtn.innerText = isP ? "STOP" : "PLAY"; }
+        else proc();
+    };
+
+    ['up','down','left','right'].forEach(d => {
+        document.getElementById(`b-${d}`).onclick = (e) => { dirs[d] = !dirs[d]; e.target.classList.toggle('active'); };
+    });
+
+    document.getElementById('tr').oninput = upUI;
+    document.getElementById('res').onclick = () => { location.reload(); };
+    document.getElementById('ch').onclick = () => {
+        document.getElementById('ef').selectedIndex = Math.floor(Math.random()*3);
+        document.getElementById('tr').value = Math.random()*200; upUI();
+    };
+
+    // Imagen preset local como fuente inicial (ligera, se procesa una sola vez)
+    img.crossOrigin = "Anonymous";
+    img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        upUI();
+    };
+    img.src = 'preset.jpg';
+})();
+</script>
+</body>
+</html>

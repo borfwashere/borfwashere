@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Borf Private Files</title>
+    <style>
+        :root { 
+            --win-gray: #c0c0c0; 
+            --win-border-light: #ffffff; 
+            --win-border-dark: #808080; 
+            --win-blue-dark: #000080; 
+            --win-blue-light: #1084d0;
+            --viewer-width: 750px; 
+            --viewer-height: 580px;
+        }
+        
+        * { 
+            margin: 0; padding: 0; box-sizing: border-box; 
+            user-select: none; 
+            -webkit-user-select: none;
+            -webkit-touch-callout: none; /* Bloquea menú contextual en iOS */
+            -webkit-user-drag: none; 
+            outline: none; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        
+        body, html { 
+            width: 100%; height: 100%; 
+            font-family: 'Tahoma', sans-serif; 
+            background-color: #fff; 
+            overflow: hidden; 
+            display: flex; flex-direction: column; 
+            position: relative;
+            touch-action: manipulation; /* Mejora respuesta en móviles */
+        }
+
+        #explorer { 
+            flex: 1; 
+            padding: 20px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+            gap: 10px; 
+            overflow-y: auto; 
+            background: #fff;
+            z-index: 1;
+            -webkit-overflow-scrolling: touch; /* Scroll suave en iOS */
+        }
+        
+        .file-item { 
+            width: 100px; 
+            text-align: center; 
+            cursor: pointer; 
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .icon-plate { 
+            width: 90px; height: 70px; 
+            background: #fdfdfd; 
+            border: 1px solid var(--win-border-dark); 
+            display: flex; align-items: center; justify-content: center; 
+            overflow: hidden; 
+            pointer-events: none; /* Protege la imagen de ser arrastrada */
+        }
+        
+        .icon-plate img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .file-name { font-size: 10px; margin-top: 5px; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #000; }
+
+        /* --- VENTANA DEL VISOR --- */
+        #viewerWin { 
+            position: fixed; 
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%); 
+            width: var(--viewer-width);
+            height: var(--viewer-height);
+            max-width: 98vw;
+            max-height: 85vh;
+            background: var(--win-gray);
+            border: 2px outset var(--win-border-light);
+            display: none; 
+            flex-direction: column; 
+            z-index: 1000;
+            box-shadow: 4px 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .win-title { 
+            background: linear-gradient(90deg, var(--win-blue-dark) 0%, var(--win-blue-light) 100%);
+            color: white; 
+            padding: 4px 6px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-weight: bold; 
+            font-size: 12px; 
+        }
+        
+        .close-btn { 
+            width: 18px; height: 16px; 
+            background: var(--win-gray); 
+            border: 2px outset #fff; 
+            color: black; 
+            font-size: 10px; 
+            display: flex; align-items: center; justify-content: center; 
+            cursor: pointer;
+        }
+
+        .win-body { 
+            flex: 1; 
+            background: #000; 
+            overflow: hidden; 
+            display: flex; align-items: center; justify-content: center; 
+            margin: 2px;
+            border: 2px inset var(--win-border-dark);
+        }
+        
+        #activeImg { 
+            max-width: 100%; max-height: 100%; 
+            object-fit: contain; 
+            pointer-events: none; 
+            -webkit-touch-callout: none;
+        }
+
+        .win-footer { 
+            padding: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--win-gray); 
+        }
+        
+        .nav-btn { 
+            height: 28px; 
+            padding: 0 15px; 
+            background: var(--win-gray); 
+            border: 2px outset #fff; 
+            font-family: 'Tahoma'; font-size: 11px; font-weight: bold;
+        }
+        .nav-btn:active { border: 2px inset #fff; }
+    </style>
+</head>
+<body>
+
+    <div id="explorer">
+        <div style="color: #808080; padding: 20px; font-size: 11px;">Accediendo a la base de datos...</div>
+    </div>
+
+    <div id="viewerWin">
+        <div class="win-title">
+            <span id="winTitleText">Cargando...</span>
+            <div class="close-btn" id="closeHandle">X</div>
+        </div>
+        <div class="win-body">
+            <img id="activeImg" src="" alt="">
+        </div>
+        <div class="win-footer">
+            <button class="nav-btn" id="prevBtn">Anterior</button>
+            <span id="counter" style="font-size: 11px; font-weight: bold;">0 / 0</span>
+            <button class="nav-btn" id="nextBtn">Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        const API = "https://api.github.com/repos/borfwashere/Images/contents/";
+        let photos = [];
+        let currentIdx = 0;
+
+        // --- PROTECCIÓN ANTIDEBUGGER ---
+        setInterval(() => {
+            (function() {
+                const devtools = function() {};
+                devtools.toString = function() {
+                    return "BorfSecurity";
+                };
+            })();
+            // Pequeño bucle para entorpecer la inspección
+            eval("debugger");
+        }, 1000);
+
+        // Bloqueo de teclado (F12, Ctrl+Shift+I, Ctrl+U, etc.)
+        window.addEventListener('keydown', (e) => {
+            if (e.keyCode === 123 || 
+               (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+               (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Bloqueo de clic derecho
+        document.addEventListener('contextmenu', e => e.preventDefault());
+
+        // --- LÓGICA DE LA APP ---
+        async function init() {
+            try {
+                const res = await fetch(API);
+                const data = await res.json();
+                photos = data.filter(f => f.name.match(/\.(jpg|jpeg|png|gif|webp)$/i))
+                             .map(f => ({ name: f.name, url: f.download_url }));
+                render();
+            } catch (e) {
+                document.getElementById('explorer').innerHTML = "Acceso denegado o error de red.";
+            }
+        }
+
+        function render() {
+            const exp = document.getElementById('explorer');
+            exp.innerHTML = "";
+            photos.forEach((p, i) => {
+                const item = document.createElement('div');
+                item.className = 'file-item';
+                // Compatibilidad touch
+                item.addEventListener('click', () => openViewer(i));
+                item.innerHTML = `
+                    <div class="icon-plate"><img src="${p.url}"></div>
+                    <span class="file-name">${p.name}</span>
+                `;
+                exp.appendChild(item);
+            });
+        }
+
+        function openViewer(index) {
+            currentIdx = index;
+            const img = document.getElementById('activeImg');
+            img.src = photos[currentIdx].url;
+            document.getElementById('winTitleText').innerText = photos[currentIdx].name;
+            document.getElementById('counter').innerText = `${currentIdx + 1} / ${photos.length}`;
+            document.getElementById('viewerWin').style.display = "flex";
+        }
+
+        function closeViewer() {
+            document.getElementById('viewerWin').style.display = "none";
+            document.getElementById('activeImg').src = "";
+        }
+
+        // Eventos de botones (compatibles con iOS)
+        document.getElementById('closeHandle').onclick = closeViewer;
+        document.getElementById('prevBtn').onclick = () => { currentIdx = (currentIdx - 1 + photos.length) % photos.length; openViewer(currentIdx); };
+        document.getElementById('nextBtn').onclick = () => { currentIdx = (currentIdx + 1) % photos.length; openViewer(currentIdx); };
+
+        init();
+    </script>
+</body>
+</html>

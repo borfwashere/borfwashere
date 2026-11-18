@@ -1,0 +1,1 @@
+copy / darker / source-over / source-out / destination-over / destination-out

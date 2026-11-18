@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  
+  <title>Paintkachu - Protected Edition</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.1.2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js"></script>
+  <script src="./utils.js"></script>
+  <script src="./pix2pix.js"></script>
+
+  <style>
+    :root { --win-bg: #008080; --win-gray: #c0c0c0; --win-blue: #000080; --win-light: #ffffff; --win-shadow: #808080; }
+    
+    /* PROTECCIÓN INTEGRAL */
+    * { 
+      user-select: none !important; 
+      -webkit-user-select: none !important;
+      -webkit-user-drag: none !important; 
+      -webkit-tap-highlight-color: transparent !important; 
+      touch-action: none; 
+      box-sizing: border-box; 
+    }
+    
+    body { background: var(--win-bg); font-family: "MS Sans Serif", Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; padding: 5px; }
+    .window { background: var(--win-gray); border: 2px solid; border-color: var(--win-light) var(--win-shadow) var(--win-shadow) var(--win-light); width: 100%; max-width: 900px; padding: 2px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+    .title-bar { background: var(--win-blue); color: white; padding: 3px 6px; font-weight: bold; font-size: 12px; }
+    .toolbar-main { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 5px; border-bottom: 2px solid var(--win-shadow); background: #d6d6d6; justify-content: center; }
+    .color-palette { display: flex; gap: 2px; border: 2px inset white; padding: 2px; background: #999; }
+    .color-swatch { width: 22px; height: 22px; border: 1px solid #000; cursor: pointer; }
+    .color-swatch.active { outline: 2px solid white; border: 1px solid black; }
+    .tool-group { display: flex; border: 2px inset white; padding: 2px; gap: 2px; background: var(--win-gray); align-items: center; }
+    .tool-btn { width: 34px; height: 34px; border: 2px solid; border-color: var(--win-light) var(--win-shadow) var(--win-shadow) var(--win-light); background: var(--win-gray); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+    .tool-btn.active { border-color: var(--win-shadow) var(--win-light) var(--win-light) var(--win-shadow); background: #e0e0e0; }
+    .size-control { display: flex; align-items: center; gap: 4px; font-size: 11px; padding: 0 6px; border-left: 1px solid var(--win-shadow); height: 30px; }
+    .size-control input { width: 40px; height: 22px; font-family: "MS Sans Serif"; font-size: 11px; border: 2px inset white; text-align: center; }
+    .workspace { display: flex; gap: 10px; padding: 10px; justify-content: center; overflow-y: auto; max-height: 75vh; }
+    .sub-window { background: var(--win-gray); border: 2px solid; border-color: var(--win-light) var(--win-shadow) var(--win-shadow) var(--win-light); flex: 0 0 256px; }
+    .sub-title { background: #808080; color: white; font-size: 11px; padding: 2px 5px; font-weight: bold; }
+    #canvasContainer, #output { width: 256px; height: 256px; background: white; border: 2px inset white; margin: 5px auto; position: relative; }
+    #output img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .win98-btn { font-family: "MS Sans Serif"; font-size: 11px; background: var(--win-gray); border: 2px solid; border-color: white #808080 #808080 white; height: 34px; padding: 0 10px; }
+    .music-btn { background: #ff00ff !important; color: white; font-weight: bold; }
+    .blink-click { animation: blink 0.15s steps(2, start) 2; }
+    @keyframes blink { to { visibility: hidden; background: white !important; color: black !important; } }
+
+    @media (max-width: 768px) {
+        .workspace { justify-content: center; padding: 5px; }
+        .sub-window { flex: 0 0 280px; }
+        .sub-window:nth-child(2) { display: none !important; } 
+        #canvasContainer { width: 100%; height: auto; aspect-ratio: 1/1; }
+        #canvasContainer canvas { width: 100% !important; height: auto !important; }
+        .toolbar-main { transform: scale(0.9); padding: 2px; }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;">
+
+<div class="window">
+  <div class="title-bar"><span>Paintkachu</span></div>
+  <div class="toolbar-main">
+    <div class="color-palette">
+      <div class="color-swatch active" id="sw-black" onclick="setColor('#000000', 'sw-black')" style="background:#000000"></div>
+      <div class="color-swatch" id="sw-red" onclick="setColor('#ff0000', 'sw-red')" style="background:#ff0000"></div>
+      <div class="color-swatch" id="sw-blue" onclick="setColor('#0000ff', 'sw-blue')" style="background:#0000ff"></div>
+      <div class="color-swatch" id="sw-green" onclick="setColor('#00ff00', 'sw-green')" style="background:#00ff00"></div>
+      <div class="color-swatch" id="sw-white" onclick="setColor('#ffffff', 'sw-white')" style="background:#ffffff"></div>
+    </div>
+    <div class="tool-group">
+      <button class="tool-btn active" id="btn-rect" onclick="setTool('rect')">⬜</button>
+      <button class="tool-btn" id="btn-circle" onclick="setTool('circle')">⚪</button>
+      <button class="tool-btn" id="btn-triangle" onclick="setTool('triangle')">▲</button>
+    </div>
+    <div class="tool-group">
+      <button class="tool-btn" id="btn-brush" onclick="setTool('brush')">🖌️</button>
+      <button class="tool-btn" id="btn-eraser" onclick="activateEraser()">🧹</button>
+      <div class="size-control">
+        <label>PX:</label>
+        <input type="number" id="inputSize" value="2" min="1" max="50" onchange="strokeWeightVal = parseInt(this.value)">
+      </div>
+    </div>
+    <div style="display:flex; gap:2px;">
+        <button id="musicToggle" onclick="handleAction(this, toggleMusic)" class="win98-btn music-btn">🎵</button>
+        <button onclick="clearCanvas()" class="win98-btn">SUP</button>
+    </div>
+  </div>
+  <div class="workspace">
+    <div class="sub-window"><div class="sub-title">DIBUJO</div><div id="canvasContainer"></div></div>
+    <div class="sub-window"><div class="sub-title">SALIDA</div><div id="output"></div></div>
+  </div>
+</div>
+
+<script>
+  // --- PROTOCOLO DE PROTECCIÓN DE CÓDIGO ---
+  document.addEventListener('contextmenu', e => e.preventDefault());
+  document.onkeydown = function(e) {
+    if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && [73, 74, 67].includes(e.keyCode)) || (e.ctrlKey && e.keyCode == 85)) return false;
+  };
+
+  let edges2pikachu, modelReady = false, offscreenPG;
+  let currentColor = '#000000', currentTool = 'rect', isDragging = false, startX, startY, strokeWeightVal = 2;
+  const SIZE = 256;
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  function handleAction(btn, callback) {
+    btn.classList.add('blink-click');
+    setTimeout(() => btn.classList.remove('blink-click'), 300);
+    callback();
+  }
+
+  // --- LÓGICA DE AUDIO ---
+  let audioCtx = null, isPlaying = false, masterGain = null; 
+  const scale = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25];
+
+  function toggleMusic() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.setValueAtTime(0.08, audioCtx.currentTime); 
+      masterGain.connect(audioCtx.destination);
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    isPlaying = !isPlaying;
+    if (isPlaying) playBaseMelody();
+  }
+
+  function playBaseMelody() {
+    if (!isPlaying) return;
+    masterGain.gain.setTargetAtTime(isDragging ? 0.20 : 0.08, audioCtx.currentTime, 0.1);
+    triggerSynth(scale[Math.floor(Math.random() * scale.length)], 'triangle', 0.4, 0.4, true); 
+    setTimeout(playBaseMelody, random([250, 500])); 
+  }
+
+  function playDrawingNote() {
+    if (!isPlaying || !audioCtx) return;
+    const noteIdx = Math.floor(map(mouseY, SIZE, 0, 0, scale.length - 1));
+    triggerSynth(scale[noteIdx] * 2, 'sine', 0.01, 0.1, false); 
+  }
+
+  function triggerSynth(freq, type, vol, duration, isBackground) {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type; osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(vol, audioCtx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    if(isBackground) gain.connect(masterGain); else gain.connect(audioCtx.destination);
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
+  }
+
+  // --- LÓGICA P5.JS ---
+  function setup() {
+    pixelDensity(1); 
+    const canvas = createCanvas(SIZE, SIZE);
+    canvas.parent('canvasContainer');
+    offscreenPG = createGraphics(SIZE, SIZE);
+    offscreenPG.background(255);
+    background(255);
+    if (!isMobile) edges2pikachu = new Pix2pix('./models/edges2pikachu_AtoB.pict', () => { modelReady = true; });
+    canvas.elt.addEventListener('touchstart', (e) => e.preventDefault(), {passive: false});
+  }
+
+  function draw() {
+    background(255);
+    image(offscreenPG, 0, 0);
+    if (isDragging && !['brush', 'eraser'].includes(currentTool)) {
+      stroke(0); strokeWeight(strokeWeightVal); fill(currentColor);
+      let w = mouseX - startX, h = mouseY - startY;
+      if (currentTool === 'rect') rect(startX, startY, w, h);
+      else if (currentTool === 'circle') ellipse(startX + w/2, startY + h/2, w, h);
+      else if (currentTool === 'triangle') triangle(startX + w/2, startY, startX, startY + h, startX + w, startY + h);
+    }
+  }
+
+  function mousePressed() {
+    if (mouseX >= 0 && mouseX <= SIZE && mouseY >= 0 && mouseY <= SIZE) {
+        startX = mouseX; startY = mouseY; isDragging = true;
+        if(['brush', 'eraser'].includes(currentTool)) addPoint();
+        return false;
+    }
+  }
+  function mouseDragged() { if (isDragging && ['brush', 'eraser'].includes(currentTool)) addPoint(); return false; }
+  function mouseReleased() { 
+    if (isDragging) {
+      if (!['brush', 'eraser'].includes(currentTool)) { 
+        offscreenPG.stroke(0); offscreenPG.strokeWeight(strokeWeightVal); offscreenPG.fill(currentColor);
+        let w = mouseX - startX, h = mouseY - startY;
+        if (currentTool === 'rect') offscreenPG.rect(startX, startY, w, h);
+        else if (currentTool === 'circle') offscreenPG.ellipse(startX + w/2, startY + h/2, w, h);
+        else if (currentTool === 'triangle') offscreenPG.triangle(startX + w/2, startY, startX, startY + h, startX + w, startY + h);
+        playDrawingNote();
+      } 
+      if (!isMobile) renderPikachu();
+    }
+    isDragging = false; 
+  }
+
+  function addPoint() { 
+    const col = (currentTool === 'eraser' ? '#ffffff' : currentColor);
+    offscreenPG.noStroke(); offscreenPG.fill(col);
+    if (currentTool === 'eraser') offscreenPG.rect(mouseX, mouseY, strokeWeightVal * 4, strokeWeightVal * 4);
+    else offscreenPG.ellipse(mouseX, mouseY, strokeWeightVal, strokeWeightVal);
+    playDrawingNote();
+  }
+
+  function setColor(c, id) { currentColor = c; document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
+  function setTool(t) { currentTool = t; document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + t).classList.add('active'); }
+  function activateEraser() { setTool('eraser'); }
+  function clearCanvas() { offscreenPG.background(255); if(!isMobile) document.getElementById('output').innerHTML = ''; }
+
+  async function renderPikachu() {
+    if (!modelReady || isMobile) return;
+    edges2pikachu.transfer(offscreenPG.elt, (result) => { document.getElementById('output').innerHTML = `<img src="${result.src}">`; });
+  }
+</script>
+</body>
+</html>
