@@ -23,8 +23,11 @@
             .main-layout { flex-direction: column; padding: 5px; gap: 5px; overflow: hidden; }
             .viewport { height: 25dvh !important; flex-grow: 0 !important; order: 1; flex-shrink: 0; margin-bottom: 0; }
             .controls { width: 100% !important; order: 2; height: auto !important; flex: 1; display: flex; flex-direction: column; overflow-y: auto; gap: 6px; }
-            .tabs-header { display: none !important; }
+            .tabs-header { display: flex !important; gap: 4px; margin-bottom: 0; flex-shrink: 0; }
+            .tab-btn { flex: 1; min-height: 44px; padding: 8px 4px; text-align: center; }
+            .tab-btn.active { padding: 8px 4px; margin: 0; border-color: var(--win-black) var(--win-white) var(--win-white) var(--win-black); background: #e0e0e0; }
             .tab-pane { display: block !important; border: 2px solid; border-color: var(--win-white) var(--win-black) var(--win-black) var(--win-white); padding: 8px; background: var(--win-gray); }
+            .tab-pane.collapsed { display: none !important; }
             fieldset { border: 2px solid var(--win-dark-gray) var(--win-white) var(--win-white) var(--win-dark-gray); padding: 8px; }
             legend { display: block; background: var(--win-gray); padding: 0 5px; font-weight: bold; color: var(--win-blue); }
             .win-btn { min-height: 44px; font-size: 12px; }
@@ -123,10 +126,10 @@
     let img = new Image(), dirs = { up: false, down: false, left: false, right: false }, isV = false, isP = false;
 
     window.ST = (e, id) => {
-        if (window.innerWidth > 850) return;
-        document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active'); e.currentTarget.classList.add('active');
+        if (window.innerWidth > 850 && !document.body.classList.contains('embedded')) return;
+        const pane = document.getElementById(id);
+        pane.classList.toggle('collapsed');
+        e.currentTarget.classList.toggle('active', !pane.classList.contains('collapsed'));
     };
 
     const upUI = () => { document.getElementById('tr').style.setProperty('--tp', `${(document.getElementById('tr').value/255)*100}%`); };
