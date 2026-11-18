@@ -122,15 +122,15 @@ Una vez más, .imsorry.
     <div id="taskbar"><div id="start-btn" onclick="location.reload()">Inicio</div></div>
 
     <div id="art-layer">
-        <div class="mask-item" data-priority="1"><img src="01.png" onerror="this.src='01.gif'"></div>
-        <div class="mask-item" data-priority="2"><img src="02.png" onerror="this.src='02.gif'"></div>
-        <div class="mask-item" data-priority="3"><img src="03.png" onerror="this.src='03.gif'"></div>
-        <div class="mask-item" data-priority="4"><img src="04.png" onerror="this.src='04.gif'"></div>
-        <div class="mask-item" data-priority="5"><img src="05.png" onerror="this.src='05.gif'"></div>
-        <div class="mask-item" data-priority="6"><img src="06.png" onerror="this.src='06.gif'"></div>
-        <div class="mask-item" data-priority="7"><img src="07.png" onerror="this.src='07.gif'"></div>
-        <div class="mask-item" data-priority="8"><img src="08.png" onerror="this.src='08.gif'"></div>
-        <div class="mask-item" data-priority="9"><img src="09.png" onerror="this.src='09.gif'"></div>
+        <div class="mask-item" data-priority="1"><img src="01.gif"></div>
+        <div class="mask-item" data-priority="2"><img src="02.gif"></div>
+        <div class="mask-item" data-priority="3"><img src="03.gif"></div>
+        <div class="mask-item" data-priority="4"><img src="04.png"></div>
+        <div class="mask-item" data-priority="5"><img src="05.gif"></div>
+        <div class="mask-item" data-priority="6"><img src="06.png"></div>
+        <div class="mask-item" data-priority="7"><img src="07.gif"></div>
+        <div class="mask-item" data-priority="8"><img src="08.gif"></div>
+        <div class="mask-item" data-priority="9"><img src="09.gif"></div>
     </div>
 
     <script src="jquery-1.12.4.min.js"></script>
@@ -178,7 +178,7 @@ Una vez más, .imsorry.
                 $('#notepad-window').css({
                     left: (ww - $('#notepad-window').outerWidth()) / 2,
                     top: wh < 600 ? '4%' : '12%'
-                }).fadeIn();
+                });
 
                 $('.mask-item').each(function() {
                     const tw = ww * (ww < 768 ? 0.30 : 0.18);
