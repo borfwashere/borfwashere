@@ -105,7 +105,7 @@
         fos-bar { 
             background: #c0c0c0 !important; 
             border-top: 1px solid #fff !important; 
-            z-index: 10000; 
+            z-index: 950;
             position: absolute; 
             bottom: 0; 
             width: 100%; 
@@ -219,7 +219,28 @@
                 const shell = win.querySelector('.app-shell');
                 if (shell) shell.innerHTML = "";
                 win.setAttribute('visible', 'false');
+                win.style.display = 'none';
             });
+            syncBar();
+        }
+
+        const taskbar = document.querySelector('fos-bar');
+        function syncBar() {
+            if (!taskbar) return;
+            const maximized = [...document.querySelectorAll('fos-window')]
+                .some(w => w.hasAttribute('fixed') && w.style.display !== 'none');
+            taskbar.style.display = maximized ? 'none' : '';
+        }
+        const barObserver = new MutationObserver(syncBar);
+        document.querySelectorAll('fos-window').forEach(w =>
+            barObserver.observe(w, { attributes: true, attributeFilter: ['fixed', 'style'] })
+        );
+        syncBar();
+
+        function openWin(win) {
+            if (!win) return;
+            win.setAttribute('visible', 'true');
+            if (win.hasAttribute('data-repo') && !win.hasAttribute('fixed')) win.maximize();
         }
 
         let lastTap = 0;
@@ -232,8 +253,7 @@
 
             if (trash) { if (isDouble) { killAll(); } lastTap = now; return; }
             if (readme && isDouble) {
-                const win = document.querySelector('fos-window[name="win_help"]');
-                if (win) win.setAttribute('visible', 'true');
+                openWin(document.querySelector('fos-window[name="win_help"]'));
                 lastTap = now; return;
             }
 
@@ -242,7 +262,7 @@
                 const winName = icon.getAttribute('href');
                 const win = document.querySelector(`fos-window[name="${winName}"]`);
                 if (win) {
-                    win.setAttribute('visible', 'true');
+                    openWin(win);
                     const shell = win.querySelector('.app-shell');
                     const url = win.getAttribute('data-repo');
                     if (shell && url && shell.innerHTML.trim() === "") {
