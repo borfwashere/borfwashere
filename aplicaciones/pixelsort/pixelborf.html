@@ -73,6 +73,7 @@
                     <input type="file" id="fi" accept="image/*, video/mp4" style="display:none">
                     <button class="win-btn" onclick="document.getElementById('fi').click()">IMPORT</button>
                     <button class="win-btn" id="res" style="margin-top:5px">RESTORE</button>
+                    <button class="win-btn" id="dl" style="margin-top:5px">DOWNLOAD PNG</button>
                 </fieldset>
             </div>
             <div id="p2" class="tab-pane">
@@ -184,6 +185,16 @@
 
     document.getElementById('tr').oninput = upUI;
     document.getElementById('res').onclick = () => { location.reload(); };
+    document.getElementById('dl').onclick = () => {
+        canvas.toBlob(blob => {
+            if (!blob) return;
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'kimsort.png';
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }, 'image/png');
+    };
     document.getElementById('ch').onclick = () => {
         document.getElementById('ef').selectedIndex = Math.floor(Math.random()*3);
         document.getElementById('tr').value = Math.random()*200; upUI();
