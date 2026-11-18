@@ -243,12 +243,12 @@
             win.style.display = 'block';
             win.style.zIndex = '999';
             if (win.hasAttribute('data-repo') && !win.hasAttribute('fixed')) {
-                const w = Math.min(parseInt(win.getAttribute('width')) || 900, innerWidth - 40);
-                const h = Math.min(parseInt(win.getAttribute('height')) || 620, innerHeight - 56);
-                win.style.width = w + 'px';
-                win.style.height = h + 'px';
-                win.style.left = Math.max(8, Math.round((innerWidth - w) / 2)) + 'px';
-                win.style.top = Math.max(8, Math.round((innerHeight - 40 - h) / 2)) + 'px';
+                const W = (parseInt(win.getAttribute('width')) || 900) + 'px';
+                const H = (parseInt(win.getAttribute('height')) || 620) + 'px';
+                win.style.width = `min(${W}, calc(100vw - 40px))`;
+                win.style.height = `min(${H}, calc(100vh - 56px))`;
+                win.style.left = `max(8px, calc((100vw - ${win.style.width}) / 2))`;
+                win.style.top = `max(8px, calc((100vh - 40px - ${win.style.height}) / 2))`;
             }
         }
 
