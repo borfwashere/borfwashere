@@ -224,6 +224,7 @@
             syncBar();
         }
 
+        const APP_V = '?v=20261118';
         const taskbar = document.querySelector('fos-bar');
         function syncBar() {
             if (!taskbar) return;
@@ -274,7 +275,7 @@
                     const shell = win.querySelector('.app-shell');
                     const url = win.getAttribute('data-repo');
                     if (shell && url && shell.innerHTML.trim() === "") {
-                        shell.innerHTML = `<iframe src="${url}"></iframe>`;
+                        shell.innerHTML = `<iframe src="${url}${APP_V}"></iframe>`;
                     }
                 }
             }
