@@ -163,7 +163,7 @@
     </div>
 
     <script>
-        const API = "https://api.github.com/repos/borfwashere/Images/contents/";
+        const API = "index.json";
         let photos = [];
         let currentIdx = 0;
 
@@ -197,8 +197,7 @@
             try {
                 const res = await fetch(API);
                 const data = await res.json();
-                photos = data.filter(f => f.name.match(/\.(jpg|jpeg|png|gif|webp)$/i))
-                             .map(f => ({ name: f.name, url: f.download_url }));
+                photos = data.map(name => ({ name, url: encodeURIComponent(name) }));
                 render();
             } catch (e) {
                 document.getElementById('explorer').innerHTML = "Acceso denegado o error de red.";
