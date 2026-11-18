@@ -240,7 +240,16 @@
         function openWin(win) {
             if (!win) return;
             win.setAttribute('visible', 'true');
-            if (win.hasAttribute('data-repo') && !win.hasAttribute('fixed')) win.maximize();
+            win.style.display = 'block';
+            win.style.zIndex = '999';
+            if (win.hasAttribute('data-repo') && !win.hasAttribute('fixed')) {
+                const w = Math.min(parseInt(win.getAttribute('width')) || 900, innerWidth - 40);
+                const h = Math.min(parseInt(win.getAttribute('height')) || 620, innerHeight - 56);
+                win.style.width = w + 'px';
+                win.style.height = h + 'px';
+                win.style.left = Math.max(8, Math.round((innerWidth - w) / 2)) + 'px';
+                win.style.top = Math.max(8, Math.round((innerHeight - 40 - h) / 2)) + 'px';
+            }
         }
 
         let lastTap = 0;
