@@ -20,16 +20,14 @@
         @media (max-width: 850px) {
             body { padding: 0; height: 100dvh; align-items: stretch; }
             .window { max-height: 100dvh; height: 100%; border: none; }
-            .main-layout { flex-direction: column; padding: 5px; gap: 0; overflow: hidden; }
-            .viewport { height: 40dvh !important; order: 1; flex-shrink: 0; margin-bottom: 5px; }
-            .controls { width: 100% !important; order: 2; height: 230px !important; display: flex; flex-direction: column; }
-            .tabs-header { display: flex; margin-bottom: -2px; z-index: 10; }
-            .tab-btn { padding: 6px 12px; font-size: 11px; font-weight: bold; background: var(--win-gray); border: 2px solid; border-color: var(--win-white) var(--win-black) var(--win-gray) var(--win-white); }
-            .tab-btn.active { border-bottom: none; padding-bottom: 8px; margin-top: -2px; }
-            .tab-pane { display: none; border: 2px solid; border-color: var(--win-white) var(--win-black) var(--win-black) var(--win-white); padding: 10px; background: var(--win-gray); flex-grow: 1; }
-            .tab-pane.active { display: block; }
-            fieldset { border: none !important; padding: 0 !important; }
-            legend { display: none; }
+            .main-layout { flex-direction: column; padding: 5px; gap: 5px; overflow: hidden; }
+            .viewport { height: 25dvh !important; flex-grow: 0 !important; order: 1; flex-shrink: 0; margin-bottom: 0; }
+            .controls { width: 100% !important; order: 2; height: auto !important; flex: 1; display: flex; flex-direction: column; overflow-y: auto; gap: 6px; }
+            .tabs-header { display: none !important; }
+            .tab-pane { display: block !important; border: 2px solid; border-color: var(--win-white) var(--win-black) var(--win-black) var(--win-white); padding: 8px; background: var(--win-gray); }
+            fieldset { border: 2px solid var(--win-dark-gray) var(--win-white) var(--win-white) var(--win-dark-gray); padding: 8px; }
+            legend { display: block; background: var(--win-gray); padding: 0 5px; font-weight: bold; color: var(--win-blue); }
+            .win-btn { min-height: 44px; font-size: 12px; }
         }
         .controls { width: 330px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
         fieldset { border: 2px solid; border-color: var(--win-dark-gray) var(--win-white) var(--win-white) var(--win-dark-gray); padding: 10px; font-size: 11px; }
