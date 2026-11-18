@@ -73,7 +73,7 @@
                     <input type="file" id="fi" accept="image/*, video/mp4" style="display:none">
                     <button class="win-btn" onclick="document.getElementById('fi').click()">IMPORT</button>
                     <button class="win-btn" id="res" style="margin-top:5px">RESTORE</button>
-                    <button class="win-btn" id="dl" style="margin-top:5px">DOWNLOAD PNG</button>
+                    <button class="win-btn" id="dl" style="margin-top:5px">DOWNLOAD</button>
                 </fieldset>
             </div>
             <div id="p2" class="tab-pane">
@@ -110,6 +110,8 @@
 
     // --- ENGINE ---
     const canvas = document.getElementById('c'), ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const srcCanvas = document.createElement('canvas'), srcCtx = srcCanvas.getContext('2d', { willReadFrequently: true });
+    const saveSource = () => { srcCanvas.width = canvas.width; srcCanvas.height = canvas.height; srcCtx.drawImage(canvas, 0, 0); };
     const video = document.getElementById('v'), pBtn = document.getElementById('pb');
     let img = new Image(), dirs = { up: false, down: false, left: false, right: false }, isV = false, isP = false;
 
@@ -125,8 +127,8 @@
     document.getElementById('fi').onchange = (e) => {
         const file = e.target.files[0]; if(!file) return;
         const url = URL.createObjectURL(file);
-        if(file.type.includes('video')) { isV = true; video.src = url; video.onloadedmetadata = () => { const s = Math.min(1, 640 / Math.max(video.videoWidth, video.videoHeight)); canvas.width = Math.round(video.videoWidth * s); canvas.height = Math.round(video.videoHeight * s); video.currentTime = 0.1; }; video.onseeked = () => ctx.drawImage(video, 0, 0, canvas.width, canvas.height); }
-        else { isV = false; img.onload = () => { canvas.width = img.width; canvas.height = img.height; ctx.drawImage(img, 0, 0); }; img.src = url; }
+        if(file.type.includes('video')) { isV = true; video.src = url; video.onloadedmetadata = () => { const s = Math.min(1, 640 / Math.max(video.videoWidth, video.videoHeight)); canvas.width = Math.round(video.videoWidth * s); canvas.height = Math.round(video.videoHeight * s); video.currentTime = 0.1; }; video.onseeked = () => { ctx.drawImage(video, 0, 0, canvas.width, canvas.height); saveSource(); }; }
+        else { isV = false; img.onload = () => { canvas.width = img.width; canvas.height = img.height; ctx.drawImage(img, 0, 0); saveSource(); }; img.src = url; }
     };
 
     const run = (axis, th, type, d, ran) => {
@@ -184,7 +186,10 @@
     });
 
     document.getElementById('tr').oninput = upUI;
-    document.getElementById('res').onclick = () => { location.reload(); };
+    document.getElementById('res').onclick = () => {
+        if (isV) { if (video.readyState >= 2) ctx.drawImage(video, 0, 0, canvas.width, canvas.height); }
+        else if (srcCanvas.width) ctx.drawImage(srcCanvas, 0, 0);
+    };
     document.getElementById('dl').onclick = () => {
         canvas.toBlob(blob => {
             if (!blob) return;
@@ -206,6 +211,7 @@
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
+        saveSource();
         upUI();
     };
     img.src = 'preset.jpg';
