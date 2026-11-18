@@ -68,6 +68,11 @@
         .tool-btn, .win98-btn, .color-swatch { min-width: 44px; min-height: 44px; }
         .color-swatch { width: 44px; height: 44px; }
         .size-control input { width: 56px; height: 44px; font-size: 16px; }
+        .params-toggle { display: none; width: 100%; margin: 4px 0; }
+        .toolbar-main.collapsed { display: none; }
+    }
+    @media (max-width: 600px) {
+        .params-toggle { display: block; min-height: 44px; }
     }
 
     body.embedded { background: #000; padding: 0; align-items: stretch; justify-content: stretch; }
@@ -83,6 +88,7 @@
 
 <div class="window">
   <div class="title-bar"><span>PimpMyFace</span></div>
+  <button id="paramsToggle" class="win98-btn params-toggle" type="button">PARÁMETROS ▾</button>
   <div class="toolbar-main">
     <div class="color-palette">
       <div class="color-swatch active" id="sw-black" onclick="setColor('#000000', 'sw-black')" style="background:#000000"></div>
@@ -256,6 +262,14 @@
     if (!modelReady) return;
     edges2pikachu.transfer(offscreenPG.elt, (result) => { document.getElementById('output').innerHTML = `<img src="${result.src}">`; });
   }
+
+  const paramsToggle = document.getElementById('paramsToggle');
+  const toolbar = document.querySelector('.toolbar-main');
+  if (window.innerWidth <= 600) toolbar.classList.add('collapsed');
+  paramsToggle.onclick = () => {
+    const collapsed = toolbar.classList.toggle('collapsed');
+    paramsToggle.textContent = collapsed ? 'PARÁMETROS ▾' : 'PARÁMETROS ▴';
+  };
 </script>
 </body>
 </html>
