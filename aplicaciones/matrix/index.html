@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Matrix Engine - Unified</title>
     <style>
         body { margin: 0; background: #018281; font-family: 'MS Sans Serif', Arial, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
@@ -17,6 +18,16 @@
         .win-btn:active { border: 2px inset #fff; box-shadow: none; padding: 7px 14px 5px 16px; }
         .recording { color: #ff0000 !important; border: 2px inset #fff !important; background: #e0e0e0 !important; }
         #upload { display: none; }
+
+        @media (max-width: 600px) {
+            body { height: 100dvh; }
+            .window-container { width: 100%; box-sizing: border-box; }
+            .viewport { height: 55dvh; }
+            .control-panel { grid-template-columns: 1fr; gap: 6px; padding: 8px; }
+            .group { padding: 14px 8px 8px 8px; }
+            .win-btn { min-height: 44px; min-width: 44px; padding: 8px 12px; }
+            .win-btn:active { padding: 8px 12px; }
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
