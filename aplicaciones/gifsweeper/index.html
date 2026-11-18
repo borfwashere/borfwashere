@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>GifSweeper</title>
     <style>
         body { margin: 0; background-color: #008080; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'MS Sans Serif', Arial, sans-serif; }
@@ -23,6 +24,16 @@
         .mine-shape::before { content: ''; position: absolute; background: inherit; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 18px; height: 2px; }
         .mine-shape::after { content: ''; position: absolute; background: inherit; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 2px; height: 18px; }
         .label-text { font-size: 10px; color: #000; font-weight: bold; }
+
+        @media (max-width: 600px) {
+            body { height: 100dvh; }
+            .window { width: 100%; box-sizing: border-box; }
+            .game-area { height: 50dvh; }
+            .status-panel { flex-wrap: wrap; gap: 6px; }
+            .win-btn, .smiley-btn { min-height: 44px; min-width: 44px; }
+            .win-input { font-size: 16px; }
+            .slot { width: 30px; height: 30px; }
+        }
     </style>
     <script src="https://unpkg.com/gifler@0.1.0/gifler.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
