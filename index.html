@@ -224,7 +224,7 @@
             syncBar();
         }
 
-        const APP_V = '?v=20261118c';
+        const APP_V = '?v=20261118d';
         const taskbar = document.querySelector('fos-bar');
         function syncBar() {
             if (!taskbar) return;
@@ -282,7 +282,7 @@
                                 const d = frame.contentDocument;
                                 if (d && url.indexOf('pixelborf') !== -1) {
                                     const s = d.createElement('style');
-                                    s.textContent = '.title-bar{display:none!important}.window{border:none!important;box-shadow:none!important;padding:0!important}';
+                                    s.textContent = '.title-bar{display:none!important}';
                                     d.head.appendChild(s);
                                 }
                             } catch (e) {}
