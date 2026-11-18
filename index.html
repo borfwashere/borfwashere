@@ -145,6 +145,7 @@
                 <fos-menu-item href="win_webscape"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></div> Webscape</fos-menu-item>
                 <fos-menu-item href="win_3d_explorer"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></div> 3D Explorer</fos-menu-item>
                 <fos-menu-item href="win_images"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div> Images</fos-menu-item>
+                <fos-menu-item href="win_imsorry"><div class="icon-box">📝</div> Imsorry</fos-menu-item>
                 <hr>
                 <fos-menu-item href="win_help"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/notepad-0.png"></div> README.txt</fos-menu-item>
             </fos-menu>
@@ -169,6 +170,7 @@
         <fos-icon href="win_webscape" name="Webscape" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/world-1.png"></div></fos-icon>
         <fos-icon href="win_3d_explorer" name="3D Explorer" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/msie2-2.png"></div></fos-icon>
         <fos-icon href="win_images" name="Images" class="draggable-icon"><div class="icon-box"><img src="https://win98icons.alexmeub.com/icons/png/directory_open_file_mydocs-4.png"></div></fos-icon>
+        <fos-icon href="win_imsorry" name="Imsorry" class="draggable-icon"><div class="icon-box">📝</div></fos-icon>
 
         <fos-window name="win_help" title="README.txt - Notepad" width="500" height="420" visible="true">
             <div class="readme-content">
@@ -194,6 +196,7 @@
         <fos-window name="win_webscape" title="Webscape" width="900" height="650" visible="false" data-repo="aplicaciones/web/web.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_3d_explorer" title="Reality-Editor v1.0" width="1050" height="750" visible="false" data-repo="aplicaciones/3dexplorer/3dexp.html"><div class="app-shell"></div></fos-window>
         <fos-window name="win_images" title="Images" width="900" height="600" visible="false" data-repo="aplicaciones/images/images.html"><div class="app-shell"></div></fos-window>
+        <fos-window name="win_imsorry" title=".imsorry.bat" width="900" height="600" visible="false" data-repo="aplicaciones/imsorry/imsorry.html"><div class="app-shell"></div></fos-window>
         
     </fos-desktop>
 
@@ -224,7 +227,7 @@
             syncBar();
         }
 
-        const APP_V = '?v=20261118u';
+        const APP_V = '?v=20261118v';
         const taskbar = document.querySelector('fos-bar');
         function syncBar() {
             if (!taskbar) return;
