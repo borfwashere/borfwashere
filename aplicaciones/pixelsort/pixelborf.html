@@ -52,6 +52,15 @@
         body.embedded .title-bar, body.embedded .status-bar { display: none !important; }
         body.embedded .main-layout { flex: 1; height: 100%; padding: 0; gap: 0; }
         body.embedded .viewport { height: 100% !important; border: none; }
+
+        @media (max-width: 600px) {
+            body.embedded .main-layout { flex-direction: column; }
+            body.embedded .viewport { flex: 0 0 auto !important; height: 25dvh !important; width: 100%; }
+            body.embedded .controls {
+                flex: 1 1 auto !important; width: 100% !important;
+                height: auto !important; max-height: none !important; overflow-y: auto;
+            }
+        }
     </style>
 </head>
 <body oncontextmenu="return false;">
