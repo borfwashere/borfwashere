@@ -240,7 +240,6 @@
         function openWin(win) {
             if (!win) return;
             win.setAttribute('visible', 'true');
-            win.style.display = 'block';
             win.style.zIndex = '999';
             if (win.hasAttribute('data-repo') && !win.hasAttribute('fixed')) {
                 const W = (parseInt(win.getAttribute('width')) || 900) + 'px';
