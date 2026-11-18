@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="mobile-web-app-capable" content="yes">
   
-  <title>Paintkachu - Protected Edition</title>
+  <title>PimpMyFace</title>
   
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.1.2"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.min.js"></script>
@@ -82,7 +82,7 @@
 <body oncontextmenu="return false;">
 
 <div class="window">
-  <div class="title-bar"><span>Paintkachu</span></div>
+  <div class="title-bar"><span>PimpMyFace</span></div>
   <div class="toolbar-main">
     <div class="color-palette">
       <div class="color-swatch active" id="sw-black" onclick="setColor('#000000', 'sw-black')" style="background:#000000"></div>
@@ -247,6 +247,7 @@
     loadImage('./examples/input' + n + '.png', img => {
       offscreenPG.background(255);
       offscreenPG.image(img, 0, 0, SIZE, SIZE);
+      renderPikachu();
     });
   }
   function clearCanvas() { offscreenPG.background(255); document.getElementById('output').innerHTML = ''; }
