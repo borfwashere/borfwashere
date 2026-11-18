@@ -224,7 +224,7 @@
             syncBar();
         }
 
-        const APP_V = '?v=20261118b';
+        const APP_V = '?v=20261118c';
         const taskbar = document.querySelector('fos-bar');
         function syncBar() {
             if (!taskbar) return;
@@ -275,7 +275,19 @@
                     const shell = win.querySelector('.app-shell');
                     const url = win.getAttribute('data-repo');
                     if (shell && url && shell.innerHTML.trim() === "") {
-                        shell.innerHTML = `<iframe src="${url}${APP_V}"></iframe>`;
+                        shell.innerHTML = '<iframe></iframe>';
+                        const frame = shell.querySelector('iframe');
+                        frame.addEventListener('load', () => {
+                            try {
+                                const d = frame.contentDocument;
+                                if (d && url.indexOf('pixelborf') !== -1) {
+                                    const s = d.createElement('style');
+                                    s.textContent = '.title-bar{display:none!important}.window{border:none!important;box-shadow:none!important;padding:0!important}';
+                                    d.head.appendChild(s);
+                                }
+                            } catch (e) {}
+                        });
+                        frame.src = url + APP_V;
                     }
                 }
             }
