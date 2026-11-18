@@ -107,6 +107,7 @@
     <div style="display:flex; gap:2px;">
         <button id="musicToggle" onclick="handleAction(this, toggleMusic)" class="win98-btn music-btn">🎵</button>
         <button onclick="clearCanvas()" class="win98-btn">SUP</button>
+        <button onclick="getRandomExample()" class="win98-btn">EJEMPLO</button>
     </div>
   </div>
   <div class="workspace">
@@ -238,6 +239,16 @@
   function setColor(c, id) { currentColor = c; document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
   function setTool(t) { currentTool = t; document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + t).classList.add('active'); }
   function activateEraser() { setTool('eraser'); }
+  let previousExample = -1;
+  function getRandomExample() {
+    let n = Math.floor(Math.random() * 17) + 1;
+    if (n === previousExample) n = (n % 17) + 1;
+    previousExample = n;
+    loadImage('./examples/input' + n + '.png', img => {
+      offscreenPG.background(255);
+      offscreenPG.image(img, 0, 0, SIZE, SIZE);
+    });
+  }
   function clearCanvas() { offscreenPG.background(255); document.getElementById('output').innerHTML = ''; }
 
   async function renderPikachu() {
