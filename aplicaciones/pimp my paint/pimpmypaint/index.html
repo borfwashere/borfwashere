@@ -185,8 +185,8 @@
     offscreenPG = createGraphics(SIZE, SIZE);
     offscreenPG.background(255);
     background(255);
-    if (!isMobile) edges2pikachu = new Pix2pix('./models/edges2pikachu_AtoB.pict', () => { modelReady = true; });
-    canvas.elt.addEventListener('touchstart', (e) => e.preventDefault(), {passive: false});
+    const modelPath = isMobile ? './models/PixFaceLightLight.pict' : './models/PixFace.pict';
+    edges2pikachu = new Pix2pix(modelPath, () => { modelReady = true; });
   }
 
   function draw() {
@@ -209,6 +209,9 @@
     }
   }
   function mouseDragged() { if (isDragging && ['brush', 'eraser'].includes(currentTool)) addPoint(); return false; }
+  function touchStarted() { return mousePressed(); }
+  function touchMoved() { return mouseDragged(); }
+  function touchEnded() { return mouseReleased(); }
   function mouseReleased() { 
     if (isDragging) {
       if (!['brush', 'eraser'].includes(currentTool)) { 
@@ -219,7 +222,7 @@
         else if (currentTool === 'triangle') offscreenPG.triangle(startX + w/2, startY, startX, startY + h, startX + w, startY + h);
         playDrawingNote();
       } 
-      if (!isMobile) renderPikachu();
+      renderPikachu();
     }
     isDragging = false; 
   }
@@ -235,10 +238,10 @@
   function setColor(c, id) { currentColor = c; document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); }
   function setTool(t) { currentTool = t; document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active')); document.getElementById('btn-' + t).classList.add('active'); }
   function activateEraser() { setTool('eraser'); }
-  function clearCanvas() { offscreenPG.background(255); if(!isMobile) document.getElementById('output').innerHTML = ''; }
+  function clearCanvas() { offscreenPG.background(255); document.getElementById('output').innerHTML = ''; }
 
   async function renderPikachu() {
-    if (!modelReady || isMobile) return;
+    if (!modelReady) return;
     edges2pikachu.transfer(offscreenPG.elt, (result) => { document.getElementById('output').innerHTML = `<img src="${result.src}">`; });
   }
 </script>
