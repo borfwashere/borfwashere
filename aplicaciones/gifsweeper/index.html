@@ -34,19 +34,22 @@
             .win-input { font-size: 16px; }
             .slot { width: 30px; height: 30px; }
         }
+
+        body.embedded { background: #000; padding: 0; align-items: stretch; justify-content: stretch; }
+        body.embedded .window {
+            width: 100%; max-width: none; height: 100%; max-height: none;
+            border: none; box-shadow: none; padding: 0;
+        }
+        body.embedded .title-bar { display: none !important; }
+        body.embedded .game-area { height: auto; flex: 1; }
     </style>
     <script src="https://unpkg.com/gifler@0.1.0/gifler.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
 </head>
 <body>
 
 <div class="window">
     <div class="title-bar">
         <span>GifSweeper</span>
-        <div style="display:flex; gap:2px;">
-            <button class="win-btn" id="btn-reset-canvas">_</button>
-            <button class="win-btn" id="btn-close-file">X</button>
-        </div>
     </div>
 
     <div class="url-bar">
@@ -58,10 +61,10 @@
         <div style="display:flex; gap: 5px; align-items: center;">
             <div class="led-display" id="numDisplay">040</div>
             <button class="win-btn" onclick="document.getElementById('fileInput').click()">LOAD</button>
+            <button class="win-btn" id="btn-reset-canvas">RESTORE</button>
         </div>
         <button class="smiley-btn" id="changeEffectBtn">😊</button>
         <div style="display:flex; gap: 5px; align-items: center;">
-            <button class="win-btn" id="saveBtn">GIF</button>
             <button class="win-btn" id="saveWebmBtn">WEBM</button>
             <div class="led-display" id="effect-code">CPY</div>
         </div>
@@ -87,6 +90,8 @@
 </div>
 
 <script>
+    if (window.self !== window.top) document.body.classList.add('embedded');
+
     const canvas = document.getElementById('mainCanvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     const fileInput = document.getElementById('fileInput');
@@ -96,7 +101,6 @@
     const effectDisplay = document.getElementById('effectName');
     const effectCode = document.getElementById('effect-code');
     const changeEffectBtn = document.getElementById('changeEffectBtn');
-    const saveBtn = document.getElementById('saveBtn');
     const saveWebmBtn = document.getElementById('saveWebmBtn');
 
     const effects = ['copy', 'darker', 'source-over', 'source-out', 'destination-over', 'destination-out'];
@@ -149,8 +153,6 @@
         }
         mediaRecorder = null;
         recordedChunks = [];
-        saveBtn.classList.remove('recording');
-        saveBtn.textContent = "GIF";
         saveWebmBtn.classList.remove('recording');
         saveWebmBtn.textContent = "WEBM";
     }
@@ -175,8 +177,6 @@
         document.querySelectorAll('.mine-shape').forEach(m => m.style.background = '#ffffff');
         colorIndex = 0;
     };
-
-    document.getElementById('btn-close-file').onclick = closeAndClear;
 
     changeEffectBtn.onclick = () => {
         effectIndex = (effectIndex + 1) % effects.length;
@@ -274,50 +274,6 @@
         }
     }
 
-    saveBtn.onclick = async () => {
-        if (!activeFile) return;
-        if (gifEncoder) {
-            gifCapturing = false;
-            gifEncoder.on('finished', (blob) => {
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = 'GifSweeper_Output.gif';
-                a.click();
-                setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-                gifEncoder = null;
-                gifEncoderSize = null;
-                gifCapturing = false;
-                saveBtn.textContent = "GIF";
-                saveBtn.classList.remove('recording');
-                effectCode.textContent = codes[effectIndex];
-            });
-            gifEncoder.render();
-            saveBtn.textContent = "WAIT";
-            return;
-        }
-
-        if (mediaRecorder) return;
-        try {
-            const workerScript = await getWorkerUrl();
-            gifEncoder = new GIF({
-                workers: 2,
-                quality: 10,
-                width: canvas.width,
-                height: canvas.height,
-                workerScript,
-                transparent: 'rgba(0,0,0,0)'
-            });
-            gifEncoderSize = { width: canvas.width, height: canvas.height };
-            gifCapturing = true;
-            saveBtn.textContent = "STOP";
-            saveBtn.classList.add('recording');
-            effectCode.textContent = "REC";
-        } catch (err) {
-            saveBtn.textContent = "GIF";
-            effectCode.textContent = "ERR";
-        }
-    };
-
     saveWebmBtn.onclick = () => {
         if (!activeFile) return;
         if (mediaRecorder) {
@@ -384,7 +340,7 @@
         sheet.src = DEFAULT_SHEET;
     }
 
-    startDefaultSequence();
+    startGifler('media/welcome.gif');
 </script>
 </body>
 </html>
