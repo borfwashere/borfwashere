@@ -45,6 +45,7 @@
     #canvasContainer, #output { width: 256px; height: 256px; background: white; border: 2px inset white; margin: 5px auto; position: relative; }
     #output img { width: 100%; height: 100%; object-fit: contain; display: block; }
     .win98-btn { font-family: "MS Sans Serif"; font-size: 11px; background: var(--win-gray); border: 2px solid; border-color: white #808080 #808080 white; height: 34px; padding: 0 10px; }
+    .params-toggle { display: none; }
     .music-btn { background: #ff00ff !important; color: white; font-weight: bold; }
     .blink-click { animation: blink 0.15s steps(2, start) 2; }
     @keyframes blink { to { visibility: hidden; background: white !important; color: black !important; } }
@@ -73,7 +74,7 @@
         .tool-btn, .win98-btn, .color-swatch { min-width: 44px; min-height: 44px; }
         .color-swatch { width: 44px; height: 44px; }
         .size-control input { width: 56px; height: 44px; font-size: 16px; }
-        .params-toggle { display: none; width: 100%; margin: 4px 0; }
+        .params-toggle { width: 100%; margin: 4px 0; }
         .toolbar-main.collapsed { display: none; }
     }
     @media (max-width: 600px) {
