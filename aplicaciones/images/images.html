@@ -167,18 +167,6 @@
         let photos = [];
         let currentIdx = 0;
 
-        // --- PROTECCIÓN ANTIDEBUGGER ---
-        setInterval(() => {
-            (function() {
-                const devtools = function() {};
-                devtools.toString = function() {
-                    return "BorfSecurity";
-                };
-            })();
-            // Pequeño bucle para entorpecer la inspección
-            eval("debugger");
-        }, 1000);
-
         // Bloqueo de teclado (F12, Ctrl+Shift+I, Ctrl+U, etc.)
         window.addEventListener('keydown', (e) => {
             if (e.keyCode === 123 || 
@@ -212,10 +200,16 @@
                 item.className = 'file-item';
                 // Compatibilidad touch
                 item.addEventListener('click', () => openViewer(i));
-                item.innerHTML = `
-                    <div class="icon-plate"><img src="${p.url}"></div>
-                    <span class="file-name">${p.name}</span>
-                `;
+                const plate = document.createElement('div');
+                plate.className = 'icon-plate';
+                const img = document.createElement('img');
+                img.src = p.url;
+                plate.appendChild(img);
+                const label = document.createElement('span');
+                label.className = 'file-name';
+                label.textContent = p.name;
+                item.appendChild(plate);
+                item.appendChild(label);
                 exp.appendChild(item);
             });
         }
