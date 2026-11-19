@@ -128,9 +128,20 @@
     window.ST = (e, id) => {
         if (window.innerWidth > 850 && !document.body.classList.contains('embedded')) return;
         const pane = document.getElementById(id);
-        pane.classList.toggle('collapsed');
-        e.currentTarget.classList.toggle('active', !pane.classList.contains('collapsed'));
+        const willOpen = pane.classList.contains('collapsed');
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('collapsed'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        if (willOpen) {
+            pane.classList.remove('collapsed');
+            e.currentTarget.classList.add('active');
+        }
     };
+    if (window.innerWidth <= 850) {
+        document.querySelectorAll('.tab-pane').forEach(p => p.classList.add('collapsed'));
+        document.getElementById('p1').classList.remove('collapsed');
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector('.tab-btn').classList.add('active');
+    }
 
     const upUI = () => { document.getElementById('tr').style.setProperty('--tp', `${(document.getElementById('tr').value/255)*100}%`); };
     
