@@ -21,7 +21,7 @@
             body { padding: 0; height: 100dvh; align-items: stretch; }
             .window { max-height: 100dvh; height: 100%; border: none; }
             .main-layout { flex-direction: column; padding: 5px; gap: 5px; overflow: hidden; }
-            .viewport { height: 25dvh !important; flex-grow: 0 !important; order: 1; flex-shrink: 0; margin-bottom: 0; }
+            .viewport { height: 50dvh !important; flex-grow: 0 !important; order: 1; flex-shrink: 0; margin-bottom: 0; }
             .controls { width: 100% !important; order: 2; height: auto !important; flex: 1; display: flex; flex-direction: column; overflow-y: auto; gap: 6px; }
             .tabs-header { display: flex !important; gap: 4px; margin-bottom: 0; flex-shrink: 0; }
             .tab-btn { flex: 1; min-height: 44px; padding: 8px 4px; text-align: center; }
@@ -58,7 +58,7 @@
 
         @media (max-width: 600px) {
             body.embedded .main-layout { flex-direction: column; }
-            body.embedded .viewport { flex: 0 0 auto !important; height: 25dvh !important; width: 100%; }
+            body.embedded .viewport { flex: 0 0 auto !important; height: 50dvh !important; width: 100%; }
             body.embedded .controls {
                 flex: 1 1 auto !important; width: 100% !important;
                 height: auto !important; max-height: none !important; overflow-y: auto;
